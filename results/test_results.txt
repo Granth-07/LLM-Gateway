@@ -1,0 +1,56 @@
+...................F.................................................... [ 45%]
+........................................................................ [ 91%]
+..............                                                           [100%]
+================================== FAILURES ===================================
+_______________________ test_worker_count_bounded_at_c ________________________
+
+    @pytest.mark.asyncio
+    async def test_worker_count_bounded_at_c() -> None:
+        """Verify that closed-loop generator runs exactly C tasks and concurrency <= C."""
+        c_limit = 4
+        n_requests = 20
+        warmup = 2
+    
+        active_tasks = 0
+        max_active_tasks = 0
+        task_lock = asyncio.Lock()
+    
+        # Create dummy app that tracks active concurrent handlers
+        from fastapi import FastAPI
+        app = FastAPI()
+    
+        @app.post("/chat")
+        async def dummy_chat():
+            nonlocal active_tasks, max_active_tasks
+            async with task_lock:
+                active_tasks += 1
+                if active_tasks > max_active_tasks:
+                    max_active_tasks = active_tasks
+            await asyncio.sleep(0.01)
+            async with task_lock:
+                active_tasks -= 1
+            return {"text": "ok", "timings": {"total": 0.01}}
+    
+        # We will test the worker loop directly with ASGITransport
+        workload = WorkloadConfig(concurrency=c_limit, total_requests=n_requests, warmup_requests=warmup)
+    
+        transport = httpx.ASGITransport(app=app)
+        # Monkeypatch httpx.AsyncClient inside run_closed_loop_workload to use ASGITransport
+        import bench.runner as runner_mod
+    
+        orig_client = httpx.AsyncClient
+    
+        def mock_client_factory(**kwargs):
+            return orig_client(transport=transport, base_url="http://testserver", **kwargs)
+    
+        # Run closed-loop workload with patched client
+        import unittest.mock
+        with unittest.mock.patch("httpx.AsyncClient", side_effect=mock_client_factory):
+>           records, start, end = await runner_mod.run_closed_loop_workload("http://testserver", workload)
+            ^^^^^^^^^^^^^^^^^^^
+E           ValueError: too many values to unpack (expected 3, got 5)
+
+tests\unit\test_bench.py:226: ValueError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_bench.py::test_worker_count_bounded_at_c - ValueError:...
+1 failed, 157 passed in 2.71s

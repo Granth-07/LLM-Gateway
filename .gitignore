@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.xml
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results (tracking summary and final-run raw; superseded runs ignored as total raw > 10MB)
+results/raw/*_run1.*
+results/raw/*_run2.*
+results/raw/*diag*

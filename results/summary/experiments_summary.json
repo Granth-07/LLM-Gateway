@@ -1,0 +1,687 @@
+{
+  "timestamp": 1792531899.788279,
+  "total_runtime_seconds": 279.65,
+  "experiments": [
+    {
+      "experiment": "Exp1_Client_Reuse",
+      "throughput": {
+        "variant_A": {
+          "median": 49.63,
+          "min": 47.47,
+          "max": 50.56,
+          "range": 3.09,
+          "values": [
+            50.15,
+            49.91,
+            47.6,
+            50.56,
+            47.47,
+            49.37,
+            49.63
+          ]
+        },
+        "variant_B": {
+          "median": 89.33,
+          "min": 84.34,
+          "max": 92.36,
+          "range": 8.02,
+          "values": [
+            89.33,
+            92.36,
+            85.55,
+            84.78,
+            90.47,
+            92.01,
+            84.34
+          ]
+        },
+        "verdict": "improved",
+        "details": {
+          "verdict": "improved",
+          "baseline_median": 49.63,
+          "candidate_median": 89.33,
+          "diff": 39.7,
+          "baseline_min": 47.47,
+          "baseline_max": 50.56,
+          "candidate_min": 84.34,
+          "candidate_max": 92.36,
+          "rule": "every_trial"
+        }
+      },
+      "p95_latency": {
+        "variant_A": {
+          "median": 1.490523,
+          "min": 1.43483,
+          "max": 1.566701,
+          "range": 0.131871,
+          "values": [
+            1.451732,
+            1.566701,
+            1.490523,
+            1.442572,
+            1.525199,
+            1.534818,
+            1.43483
+          ]
+        },
+        "variant_B": {
+          "median": 0.830304,
+          "min": 0.812895,
+          "max": 1.013029,
+          "range": 0.200134,
+          "values": [
+            0.827227,
+            0.841093,
+            0.863487,
+            0.812895,
+            0.815965,
+            0.830304,
+            1.013029
+          ]
+        },
+        "verdict": "improved",
+        "details": {
+          "verdict": "improved",
+          "baseline_median": 1.490523,
+          "candidate_median": 0.830304,
+          "diff": -0.660219,
+          "baseline_min": 1.43483,
+          "baseline_max": 1.566701,
+          "candidate_min": 0.812895,
+          "candidate_max": 1.013029,
+          "rule": "every_trial"
+        }
+      },
+      "client_setup_p50": {
+        "variant_A": {
+          "median": 0.008039,
+          "min": 0.007932,
+          "max": 0.008079,
+          "range": 0.000147,
+          "values": [
+            0.007932,
+            0.008076,
+            0.008039,
+            0.008027,
+            0.008079,
+            0.008045,
+            0.007993
+          ]
+        },
+        "variant_B": {
+          "median": 3e-06,
+          "min": 3e-06,
+          "max": 3e-06,
+          "range": 0.0,
+          "values": [
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06
+          ]
+        }
+      },
+      "connect_time_p50": {
+        "variant_A": {
+          "median": 0.102011,
+          "min": 0.089578,
+          "max": 0.125809,
+          "range": 0.036231,
+          "values": [
+            0.098025,
+            0.102011,
+            0.125809,
+            0.094664,
+            0.125787,
+            0.110193,
+            0.089578
+          ]
+        },
+        "variant_B": {
+          "median": 0.015031,
+          "min": 0.012101,
+          "max": 0.029982,
+          "range": 0.017881,
+          "values": [
+            0.015031,
+            0.012101,
+            0.021292,
+            0.029982,
+            0.012435,
+            0.015821,
+            0.014245
+          ]
+        }
+      },
+      "mock_peak_concurrent": {
+        "variant_A": {
+          "median": 50.0,
+          "min": 50.0,
+          "max": 50.0,
+          "range": 0.0,
+          "values": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50
+          ]
+        },
+        "variant_B": {
+          "median": 50.0,
+          "min": 50.0,
+          "max": 50.0,
+          "range": 0.0,
+          "values": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50
+          ]
+        }
+      },
+      "connection_reused_fraction": {
+        "variant_A": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variant_B": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "gateway_queue_wait_p95": {
+        "variant_A": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variant_B": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "experiment": "Exp2_Pool_Limits",
+      "throughput": {
+        "variant_A": {
+          "median": 27.08,
+          "min": 26.55,
+          "max": 27.26,
+          "range": 0.71,
+          "values": [
+            27.26,
+            26.55,
+            26.76,
+            26.82,
+            27.08,
+            27.11,
+            27.26
+          ]
+        },
+        "variant_B": {
+          "median": 81.78,
+          "min": 74.68,
+          "max": 91.24,
+          "range": 16.56,
+          "values": [
+            74.68,
+            85.47,
+            81.78,
+            84.91,
+            79.66,
+            81.7,
+            91.24
+          ]
+        },
+        "verdict": "improved",
+        "details": {
+          "verdict": "improved",
+          "baseline_median": 27.08,
+          "candidate_median": 81.78,
+          "diff": 54.7,
+          "baseline_min": 26.55,
+          "baseline_max": 27.26,
+          "candidate_min": 74.68,
+          "candidate_max": 91.24,
+          "rule": "every_trial"
+        }
+      },
+      "p95_latency": {
+        "variant_A": {
+          "median": 1.834789,
+          "min": 1.803077,
+          "max": 1.861003,
+          "range": 0.057926,
+          "values": [
+            1.803077,
+            1.847093,
+            1.861003,
+            1.848633,
+            1.834789,
+            1.817218,
+            1.815381
+          ]
+        },
+        "variant_B": {
+          "median": 0.854102,
+          "min": 0.802331,
+          "max": 0.925912,
+          "range": 0.123581,
+          "values": [
+            0.906351,
+            0.844253,
+            0.925912,
+            0.858267,
+            0.841569,
+            0.854102,
+            0.802331
+          ]
+        },
+        "verdict": "improved",
+        "details": {
+          "verdict": "improved",
+          "baseline_median": 1.834789,
+          "candidate_median": 0.854102,
+          "diff": -0.980687,
+          "baseline_min": 1.803077,
+          "baseline_max": 1.861003,
+          "candidate_min": 0.802331,
+          "candidate_max": 0.925912,
+          "rule": "every_trial"
+        }
+      },
+      "client_setup_p50": {
+        "variant_A": {
+          "median": 3e-06,
+          "min": 3e-06,
+          "max": 3e-06,
+          "range": 0.0,
+          "values": [
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06,
+            3e-06
+          ]
+        },
+        "variant_B": {
+          "median": 2e-06,
+          "min": 2e-06,
+          "max": 3e-06,
+          "range": 1e-06,
+          "values": [
+            3e-06,
+            3e-06,
+            3e-06,
+            2e-06,
+            2e-06,
+            2e-06,
+            2e-06
+          ]
+        }
+      },
+      "connect_time_p50": {
+        "variant_A": {
+          "median": 0.00289,
+          "min": 0.002426,
+          "max": 0.003961,
+          "range": 0.001535,
+          "values": [
+            0.003329,
+            0.003695,
+            0.003961,
+            0.002719,
+            0.002426,
+            0.00289,
+            0.002675
+          ]
+        },
+        "variant_B": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "range": 0.0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "mock_peak_concurrent": {
+        "variant_A": {
+          "median": 10.0,
+          "min": 10.0,
+          "max": 10.0,
+          "range": 0.0,
+          "values": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+          ]
+        },
+        "variant_B": {
+          "median": 50.0,
+          "min": 50.0,
+          "max": 50.0,
+          "range": 0.0,
+          "values": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50
+          ]
+        }
+      },
+      "connection_reused_fraction": {
+        "variant_A": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variant_B": [
+          0.84,
+          0.84,
+          0.84,
+          0.84,
+          0.84,
+          0.84,
+          0.84
+        ]
+      },
+      "gateway_queue_wait_p95": {
+        "variant_A": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "variant_B": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "experiment": "Exp3_Release_Slot_Backoff",
+      "throughput": {
+        "variant_A": {
+          "median": 37.85,
+          "min": 32.8,
+          "max": 40.91,
+          "range": 8.11,
+          "values": [
+            36.26,
+            36.57,
+            40.03,
+            40.91,
+            40.28,
+            32.8,
+            37.85
+          ]
+        },
+        "variant_B": {
+          "median": 47.69,
+          "min": 37.86,
+          "max": 49.65,
+          "range": 11.79,
+          "values": [
+            48.74,
+            45.89,
+            48.37,
+            49.65,
+            37.86,
+            47.18,
+            47.69
+          ]
+        },
+        "verdict": "inconclusive",
+        "details": {
+          "verdict": "inconclusive",
+          "baseline_median": 37.85,
+          "candidate_median": 47.69,
+          "diff": 9.84,
+          "baseline_min": 32.8,
+          "baseline_max": 40.91,
+          "candidate_min": 37.86,
+          "candidate_max": 49.65,
+          "rule": "every_trial"
+        }
+      },
+      "p95_latency": {
+        "variant_A": {
+          "median": 1.901664,
+          "min": 1.808114,
+          "max": 1.920665,
+          "range": 0.112551,
+          "values": [
+            1.911465,
+            1.859303,
+            1.920665,
+            1.882373,
+            1.808114,
+            1.901664,
+            1.906627
+          ]
+        },
+        "variant_B": {
+          "median": 1.817439,
+          "min": 1.69609,
+          "max": 1.986366,
+          "range": 0.290276,
+          "values": [
+            1.87829,
+            1.817439,
+            1.855642,
+            1.69609,
+            1.986366,
+            1.743551,
+            1.809611
+          ]
+        },
+        "verdict": "inconclusive",
+        "details": {
+          "verdict": "inconclusive",
+          "baseline_median": 1.901664,
+          "candidate_median": 1.817439,
+          "diff": -0.084225,
+          "baseline_min": 1.808114,
+          "baseline_max": 1.920665,
+          "candidate_min": 1.69609,
+          "candidate_max": 1.986366,
+          "rule": "every_trial"
+        }
+      },
+      "client_setup_p50": {
+        "variant_A": {
+          "median": 6e-06,
+          "min": 6e-06,
+          "max": 9e-06,
+          "range": 3e-06,
+          "values": [
+            6e-06,
+            6e-06,
+            6e-06,
+            6e-06,
+            6e-06,
+            9e-06,
+            6e-06
+          ]
+        },
+        "variant_B": {
+          "median": 6e-06,
+          "min": 6e-06,
+          "max": 8e-06,
+          "range": 2e-06,
+          "values": [
+            6e-06,
+            6e-06,
+            6e-06,
+            6e-06,
+            8e-06,
+            7e-06,
+            6e-06
+          ]
+        }
+      },
+      "connect_time_p50": {
+        "variant_A": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "range": 0.0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "variant_B": {
+          "median": 0.005221,
+          "min": 0.003993,
+          "max": 0.018729,
+          "range": 0.014736,
+          "values": [
+            0.004201,
+            0.005221,
+            0.005648,
+            0.003993,
+            0.018729,
+            0.008922,
+            0.004266
+          ]
+        }
+      },
+      "mock_peak_concurrent": {
+        "variant_A": {
+          "median": 22.0,
+          "min": 21.0,
+          "max": 22.0,
+          "range": 1.0,
+          "values": [
+            22,
+            22,
+            21,
+            21,
+            22,
+            21,
+            22
+          ]
+        },
+        "variant_B": {
+          "median": 25.0,
+          "min": 25.0,
+          "max": 25.0,
+          "range": 0.0,
+          "values": [
+            25,
+            25,
+            25,
+            25,
+            25,
+            25,
+            25
+          ]
+        }
+      },
+      "connection_reused_fraction": {
+        "variant_A": [
+          0.8795,
+          0.816,
+          0.8554,
+          0.8635,
+          0.8112,
+          0.8795,
+          0.7912
+        ],
+        "variant_B": [
+          0.0402,
+          0.036,
+          0.02,
+          0.032,
+          0.028,
+          0.028,
+          0.036
+        ]
+      },
+      "gateway_queue_wait_p95": {
+        "variant_A": [
+          0.582907,
+          0.57147,
+          0.601334,
+          0.614675,
+          0.574013,
+          0.585199,
+          0.593224
+        ],
+        "variant_B": [
+          0.344473,
+          0.388745,
+          0.43965,
+          0.418707,
+          0.482909,
+          0.38306,
+          0.443137
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,685 @@
+{
+  "timestamp": 1792529705.4242465,
+  "total_runtime_seconds": 258.08,
+  "matrix_results": [
+    {
+      "scenario": "clean",
+      "concurrency_C": 1,
+      "requests_N": 30,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 2.84,
+        "min": 2.84,
+        "max": 2.84,
+        "range": 0.0,
+        "values": [
+          2.84
+        ]
+      },
+      "p50_dist": {
+        "median": 0.346664,
+        "min": 0.346664,
+        "max": 0.346664,
+        "range": 0.0,
+        "values": [
+          0.346664
+        ]
+      },
+      "p95_dist": {
+        "median": 0.46782,
+        "min": 0.46782,
+        "max": 0.46782,
+        "range": 0.0,
+        "values": [
+          0.46782
+        ]
+      },
+      "p99_dist": {
+        "median": 0.47817,
+        "min": 0.47817,
+        "max": 0.47817,
+        "range": 0.0,
+        "values": [
+          0.47817
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 0.9997,
+        "littles_law_C": 1,
+        "littles_law_delta": 0.0003,
+        "gateway_peak_in_flight": 1,
+        "mock_peak_concurrent": 1
+      }
+    },
+    {
+      "scenario": "clean",
+      "concurrency_C": 10,
+      "requests_N": 150,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 27.03,
+        "min": 27.03,
+        "max": 27.03,
+        "range": 0.0,
+        "values": [
+          27.03
+        ]
+      },
+      "p50_dist": {
+        "median": 0.341218,
+        "min": 0.341218,
+        "max": 0.341218,
+        "range": 0.0,
+        "values": [
+          0.341218
+        ]
+      },
+      "p95_dist": {
+        "median": 0.484282,
+        "min": 0.484282,
+        "max": 0.484282,
+        "range": 0.0,
+        "values": [
+          0.484282
+        ]
+      },
+      "p99_dist": {
+        "median": 0.613994,
+        "min": 0.613994,
+        "max": 0.613994,
+        "range": 0.0,
+        "values": [
+          0.613994
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 9.502,
+        "littles_law_C": 10,
+        "littles_law_delta": 0.498,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 10
+      }
+    },
+    {
+      "scenario": "clean",
+      "concurrency_C": 25,
+      "requests_N": 300,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 34.24,
+        "min": 34.24,
+        "max": 34.24,
+        "range": 0.0,
+        "values": [
+          34.24
+        ]
+      },
+      "p50_dist": {
+        "median": 0.462953,
+        "min": 0.462953,
+        "max": 0.462953,
+        "range": 0.0,
+        "values": [
+          0.462953
+        ]
+      },
+      "p95_dist": {
+        "median": 1.196021,
+        "min": 1.196021,
+        "max": 1.196021,
+        "range": 0.0,
+        "values": [
+          1.196021
+        ]
+      },
+      "p99_dist": {
+        "median": 1.387149,
+        "min": 1.387149,
+        "max": 1.387149,
+        "range": 0.0,
+        "values": [
+          1.387149
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 21.9751,
+        "littles_law_C": 25,
+        "littles_law_delta": 3.0249,
+        "gateway_peak_in_flight": 25,
+        "mock_peak_concurrent": 25
+      }
+    },
+    {
+      "scenario": "clean",
+      "concurrency_C": 50,
+      "requests_N": 500,
+      "trials_count": 3,
+      "throughput_dist": {
+        "median": 53.88,
+        "min": 19.79,
+        "max": 54.27,
+        "range": 34.48,
+        "values": [
+          53.88,
+          54.27,
+          19.79
+        ]
+      },
+      "p50_dist": {
+        "median": 0.806627,
+        "min": 0.798745,
+        "max": 2.457393,
+        "range": 1.658648,
+        "values": [
+          0.798745,
+          0.806627,
+          2.457393
+        ]
+      },
+      "p95_dist": {
+        "median": 1.428776,
+        "min": 1.27007,
+        "max": 2.89726,
+        "range": 1.62719,
+        "values": [
+          1.428776,
+          1.27007,
+          2.89726
+        ]
+      },
+      "p99_dist": {
+        "median": 1.63737,
+        "min": 1.59012,
+        "max": 3.0576,
+        "range": 1.46748,
+        "values": [
+          1.59012,
+          1.63737,
+          3.0576
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 47.8911,
+        "littles_law_C": 50,
+        "littles_law_delta": 2.1089,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 50
+      }
+    },
+    {
+      "scenario": "capacity20",
+      "concurrency_C": 1,
+      "requests_N": 30,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 2.77,
+        "min": 2.77,
+        "max": 2.77,
+        "range": 0.0,
+        "values": [
+          2.77
+        ]
+      },
+      "p50_dist": {
+        "median": 0.355867,
+        "min": 0.355867,
+        "max": 0.355867,
+        "range": 0.0,
+        "values": [
+          0.355867
+        ]
+      },
+      "p95_dist": {
+        "median": 0.462131,
+        "min": 0.462131,
+        "max": 0.462131,
+        "range": 0.0,
+        "values": [
+          0.462131
+        ]
+      },
+      "p99_dist": {
+        "median": 0.504631,
+        "min": 0.504631,
+        "max": 0.504631,
+        "range": 0.0,
+        "values": [
+          0.504631
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 0.9998,
+        "littles_law_C": 1,
+        "littles_law_delta": 0.0002,
+        "gateway_peak_in_flight": 1,
+        "mock_peak_concurrent": 1
+      }
+    },
+    {
+      "scenario": "capacity20",
+      "concurrency_C": 10,
+      "requests_N": 150,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 26.93,
+        "min": 26.93,
+        "max": 26.93,
+        "range": 0.0,
+        "values": [
+          26.93
+        ]
+      },
+      "p50_dist": {
+        "median": 0.347039,
+        "min": 0.347039,
+        "max": 0.347039,
+        "range": 0.0,
+        "values": [
+          0.347039
+        ]
+      },
+      "p95_dist": {
+        "median": 0.50298,
+        "min": 0.50298,
+        "max": 0.50298,
+        "range": 0.0,
+        "values": [
+          0.50298
+        ]
+      },
+      "p99_dist": {
+        "median": 0.660723,
+        "min": 0.660723,
+        "max": 0.660723,
+        "range": 0.0,
+        "values": [
+          0.660723
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 9.4962,
+        "littles_law_C": 10,
+        "littles_law_delta": 0.5038,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 10
+      }
+    },
+    {
+      "scenario": "capacity20",
+      "concurrency_C": 25,
+      "requests_N": 300,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 51.6,
+        "min": 51.6,
+        "max": 51.6,
+        "range": 0.0,
+        "values": [
+          51.6
+        ]
+      },
+      "p50_dist": {
+        "median": 0.402375,
+        "min": 0.402375,
+        "max": 0.402375,
+        "range": 0.0,
+        "values": [
+          0.402375
+        ]
+      },
+      "p95_dist": {
+        "median": 0.713001,
+        "min": 0.713001,
+        "max": 0.713001,
+        "range": 0.0,
+        "values": [
+          0.713001
+        ]
+      },
+      "p99_dist": {
+        "median": 0.960609,
+        "min": 0.960609,
+        "max": 0.960609,
+        "range": 0.0,
+        "values": [
+          0.960609
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 22.1712,
+        "littles_law_C": 25,
+        "littles_law_delta": 2.8288,
+        "gateway_peak_in_flight": 25,
+        "mock_peak_concurrent": 25
+      }
+    },
+    {
+      "scenario": "capacity20",
+      "concurrency_C": 50,
+      "requests_N": 500,
+      "trials_count": 3,
+      "throughput_dist": {
+        "median": 18.53,
+        "min": 18.29,
+        "max": 29.2,
+        "range": 10.91,
+        "values": [
+          29.2,
+          18.53,
+          18.29
+        ]
+      },
+      "p50_dist": {
+        "median": 2.459116,
+        "min": 1.539599,
+        "max": 2.468336,
+        "range": 0.928737,
+        "values": [
+          1.539599,
+          2.459116,
+          2.468336
+        ]
+      },
+      "p95_dist": {
+        "median": 3.462214,
+        "min": 2.598566,
+        "max": 3.462575,
+        "range": 0.864009,
+        "values": [
+          2.598566,
+          3.462214,
+          3.462575
+        ]
+      },
+      "p99_dist": {
+        "median": 3.78981,
+        "min": 3.205353,
+        "max": 3.891093,
+        "range": 0.68574,
+        "values": [
+          3.205353,
+          3.891093,
+          3.78981
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 46.3217,
+        "littles_law_C": 50,
+        "littles_law_delta": 3.6783,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 50
+      }
+    },
+    {
+      "scenario": "failures",
+      "concurrency_C": 10,
+      "requests_N": 150,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 16.07,
+        "min": 16.07,
+        "max": 16.07,
+        "range": 0.0,
+        "values": [
+          16.07
+        ]
+      },
+      "p50_dist": {
+        "median": 0.385423,
+        "min": 0.385423,
+        "max": 0.385423,
+        "range": 0.0,
+        "values": [
+          0.385423
+        ]
+      },
+      "p95_dist": {
+        "median": 1.391506,
+        "min": 1.391506,
+        "max": 1.391506,
+        "range": 0.0,
+        "values": [
+          1.391506
+        ]
+      },
+      "p99_dist": {
+        "median": 2.232723,
+        "min": 2.232723,
+        "max": 2.232723,
+        "range": 0.0,
+        "values": [
+          2.232723
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.0067,
+        "min": 0.0067,
+        "max": 0.0067,
+        "range": 0.0,
+        "values": [
+          0.0067
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 8.3472,
+        "littles_law_C": 10,
+        "littles_law_delta": 1.6528,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 10
+      }
+    },
+    {
+      "scenario": "failures",
+      "concurrency_C": 50,
+      "requests_N": 500,
+      "trials_count": 3,
+      "throughput_dist": {
+        "median": 28.79,
+        "min": 16.56,
+        "max": 45.35,
+        "range": 28.79,
+        "values": [
+          45.35,
+          28.79,
+          16.56
+        ]
+      },
+      "p50_dist": {
+        "median": 0.918267,
+        "min": 0.65668,
+        "max": 2.447416,
+        "range": 1.790736,
+        "values": [
+          0.65668,
+          0.918267,
+          2.447416
+        ]
+      },
+      "p95_dist": {
+        "median": 3.875465,
+        "min": 1.847278,
+        "max": 4.445793,
+        "range": 2.598515,
+        "values": [
+          1.847278,
+          3.875465,
+          4.445793
+        ]
+      },
+      "p99_dist": {
+        "median": 5.092257,
+        "min": 2.72253,
+        "max": 6.017543,
+        "range": 3.295013,
+        "values": [
+          2.72253,
+          5.092257,
+          6.017543
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.004,
+        "min": 0.004,
+        "max": 0.01,
+        "range": 0.006,
+        "values": [
+          0.004,
+          0.004,
+          0.01
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 44.582,
+        "littles_law_C": 50,
+        "littles_law_delta": 5.418,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 39
+      }
+    },
+    {
+      "scenario": "overflow",
+      "concurrency_C": 50,
+      "requests_N": 100,
+      "trials_count": 1,
+      "throughput_dist": {
+        "median": 5.66,
+        "min": 5.66,
+        "max": 5.66,
+        "range": 0.0,
+        "values": [
+          5.66
+        ]
+      },
+      "p50_dist": {
+        "median": 0.390424,
+        "min": 0.390424,
+        "max": 0.390424,
+        "range": 0.0,
+        "values": [
+          0.390424
+        ]
+      },
+      "p95_dist": {
+        "median": 2.619869,
+        "min": 2.619869,
+        "max": 2.619869,
+        "range": 0.0,
+        "values": [
+          2.619869
+        ]
+      },
+      "p99_dist": {
+        "median": 2.763754,
+        "min": 2.763754,
+        "max": 2.763754,
+        "range": 0.0,
+        "values": [
+          2.763754
+        ]
+      },
+      "error_rate_dist": {
+        "median": 0.81,
+        "min": 0.81,
+        "max": 0.81,
+        "range": 0.0,
+        "values": [
+          0.81
+        ]
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 4.6272,
+        "littles_law_C": 50,
+        "littles_law_delta": 45.3728,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 10
+      }
+    }
+  ]
+}

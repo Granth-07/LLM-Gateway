@@ -1,0 +1,228 @@
+{
+  "trial_name": "failures_C50_t1",
+  "timestamp": 1792531582.678682,
+  "python_version": "3.15.0 (main, Oct 14 2026, 01:12:50) [MSC v.1951 64 bit (AMD64)]",
+  "config": {
+    "concurrency_C": 50,
+    "total_requests_N": 500,
+    "warmup_requests": 10,
+    "model": "mock-model",
+    "max_tokens": 128,
+    "timeout": 30.0,
+    "seed": 43,
+    "flags": {
+      "concurrency_limit": 50,
+      "queue_size": 200,
+      "reuse_http_client": false,
+      "pool_max_keepalive": 20,
+      "pool_max_connections": 100,
+      "release_slot_during_backoff": false
+    },
+    "mock_settings": {
+      "latency_mean": -1.20397,
+      "latency_sigma": 0.25,
+      "max_capacity": 100,
+      "capacity_mode": "queue",
+      "error_rate_429": 0.1,
+      "error_rate_500": 0.05,
+      "slow_tail_prob": 0.05,
+      "drop_prob": 0.02,
+      "seed": 42
+    }
+  },
+  "summary": {
+    "total_requests": 500,
+    "success_count": 499,
+    "error_count": 1,
+    "error_rate": 0.002,
+    "duration_seconds": 10.1902,
+    "throughput_rps": 48.97,
+    "connection_reused_fraction": 0.1463,
+    "connect_time_mean": 0.069023,
+    "client_gateway_gap": {
+      "p50": 0.093137,
+      "mean": 0.140206
+    },
+    "client_latency": {
+      "p50": 0.665366,
+      "p95": 1.790742,
+      "p99": 2.483499,
+      "mean": 0.859245,
+      "min": 0.294879,
+      "max": 2.988426
+    },
+    "gateway_latency": {
+      "total": {
+        "p50": 0.564963,
+        "p95": 1.698472,
+        "p99": 2.108321
+      },
+      "queue_wait": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "client_setup": {
+        "p50": 0.008042,
+        "p95": 0.009579,
+        "p99": 0.013881
+      },
+      "provider_time": {
+        "p50": 0.526933,
+        "p95": 0.892882,
+        "p99": 1.308174
+      },
+      "connect_time": {
+        "p50": 0.069136,
+        "p95": 0.16146,
+        "p99": 0.245048
+      },
+      "backoff_sleep": {
+        "p50": 0.0,
+        "p95": 1.032406,
+        "p99": 1.197003
+      },
+      "response_processing": {
+        "p50": 0.005917,
+        "p95": 0.041917,
+        "p99": 0.079719
+      },
+      "overhead": {
+        "p50": 2.7e-05,
+        "p95": 5.9e-05,
+        "p99": 7.8e-05
+      }
+    },
+    "checks": {
+      "latency_violations": 0,
+      "littles_law_L": 42.0762,
+      "littles_law_C": 50,
+      "littles_law_delta": 7.9238,
+      "gateway_peak_in_flight": 50,
+      "mock_peak_concurrent": 41
+    }
+  },
+  "gateway_metrics": {
+    "requests": {
+      "total": 510,
+      "successful": 509,
+      "failed": 1,
+      "rejected": 0,
+      "cancelled": 0
+    },
+    "counters": {
+      "attempts": {
+        "success": 509,
+        "timeout": 0,
+        "429": 57,
+        "5xx": 32,
+        "connection": 8,
+        "auth_4xx": 0
+      },
+      "finals": {
+        "success": 509,
+        "timeout": 0,
+        "429": 1,
+        "5xx": 0,
+        "connection": 0,
+        "auth_4xx": 0
+      },
+      "rejects": {
+        "queue_full": 0,
+        "queue_timeout": 0
+      },
+      "client_cancelled": 0
+    },
+    "rates": {
+      "attempt_error_rate": 0.1601,
+      "final_error_rate": 0.002,
+      "throughput_rps": 52.81
+    },
+    "latency": {
+      "successful": {
+        "total": {
+          "p50": 0.566268,
+          "p95": 1.699952,
+          "p99": 2.089641
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 0.008044,
+          "p95": 0.009571,
+          "p99": 0.012724
+        },
+        "provider_time": {
+          "p50": 0.52997,
+          "p95": 0.959124,
+          "p99": 1.298922
+        },
+        "connect_time": {
+          "p50": 0.069329,
+          "p95": 0.15982,
+          "p99": 0.219168
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.029641,
+          "p99": 1.16298
+        },
+        "response_processing": {
+          "p50": 0.006078,
+          "p95": 0.041705,
+          "p99": 0.077888
+        },
+        "overhead": {
+          "p50": 2.7e-05,
+          "p95": 5.9e-05,
+          "p99": 7.8e-05
+        }
+      },
+      "failed": {
+        "count": 1,
+        "total": {
+          "p50": 2.267004,
+          "p95": 2.267004,
+          "p99": 2.267004
+        }
+      }
+    },
+    "limiter": {
+      "waiting": 0,
+      "slots_held": 0,
+      "in_flight": 0,
+      "peak_waiting": 0,
+      "peak_slots_held": 50,
+      "peak_in_flight": 50
+    },
+    "timing_integrity": {
+      "clamped_overhead_count": 0,
+      "mean_residual_delta": 0.0
+    },
+    "records_retained": 510,
+    "max_records": 10000
+  },
+  "mock_stats": {
+    "total_requests": 594,
+    "current_concurrent": 0,
+    "peak_concurrent": 41,
+    "status_counts": {
+      "429": 57,
+      "500": 28,
+      "200": 509
+    },
+    "queue_wait": {
+      "p50": 3e-06,
+      "p95": 5e-06,
+      "mean": 3e-06
+    },
+    "service_time": {
+      "p50": 0.314187,
+      "p95": 0.625553,
+      "mean": 0.333493
+    }
+  }
+}
