@@ -86,7 +86,7 @@ class ScriptedProvider(Provider):
 # 1. Nearest-rank known vectors
 # ---------------------------------------------------------------------------
 
-def test_nearest_rank_known_vectors():
+def test_nearest_rank_known_vectors() -> None:
     # Empty
     assert nearest_rank_percentile([], 50.0) == 0.0
 
@@ -131,7 +131,7 @@ def test_nearest_rank_known_vectors():
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_counters_scripted_failure_sequence():
+async def test_counters_scripted_failure_sequence() -> None:
     clock = FakeClock(10.0)
 
     async def fake_sleep(d: float) -> None:
@@ -208,7 +208,7 @@ async def test_counters_scripted_failure_sequence():
 # 3. Throughput calculation
 # ---------------------------------------------------------------------------
 
-def test_throughput_calculation():
+def test_throughput_calculation() -> None:
     # Direct function test
     # 20 successes over 4.0 seconds => 5.0 rps
     assert compute_throughput(20, 100.0, 104.0) == 5.0
@@ -247,7 +247,7 @@ def test_throughput_calculation():
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_buckets_sum_to_total_and_clamp_count_zero():
+async def test_buckets_sum_to_total_and_clamp_count_zero() -> None:
     reset_clamped_overhead_count()
     clock = FakeClock(50.0)
 
@@ -299,7 +299,7 @@ async def test_buckets_sum_to_total_and_clamp_count_zero():
 # 5. Bounded records in deque
 # ---------------------------------------------------------------------------
 
-def test_bounded_records():
+def test_bounded_records() -> None:
     max_records = 5
     collector = MetricsCollector(max_records=max_records)
 
@@ -331,7 +331,7 @@ def test_bounded_records():
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_reset_collector_and_limiter_peaks():
+async def test_reset_collector_and_limiter_peaks() -> None:
     reset_clamped_overhead_count()
     limiter = Limiter(limit=5)
     collector = MetricsCollector()
@@ -377,7 +377,7 @@ async def test_reset_collector_and_limiter_peaks():
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_metrics_route_shape_and_reset():
+async def test_metrics_route_shape_and_reset() -> None:
     app = create_app()
 
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
@@ -415,7 +415,7 @@ async def test_metrics_route_shape_and_reset():
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_rejects_and_cancels_counted_exactly_once():
+async def test_rejects_and_cancels_counted_exactly_once() -> None:
     clock = FakeClock()
     collector = MetricsCollector()
     limiter = Limiter(limit=1, queue_size=1, queue_wait_timeout=0.05)
@@ -426,7 +426,7 @@ async def test_rejects_and_cancels_counted_exactly_once():
 
     class GatedProvider(Provider):
         name = "gate"
-        async def complete(self, req: ChatRequest, *, timeout=None) -> ProviderResult:
+        async def complete(self, req: ChatRequest, *, timeout: Optional[float] = None) -> ProviderResult:
             await hold_gate.wait()
             return ProviderResult(
                 text="ok", provider="gate", model="model",

@@ -48,7 +48,7 @@ def make_client(config: MockConfig | None = None) -> httpx.AsyncClient:
 
 class TestMockResponseShape:
     @pytest.mark.asyncio
-    async def test_openai_shape(self):
+    async def test_openai_shape(self) -> None:
         async with make_client() as c:
             r = await c.post("/v1/chat/completions", json=PAYLOAD)
         assert r.status_code == 200
@@ -61,13 +61,13 @@ class TestMockResponseShape:
         assert u["total_tokens"] == u["prompt_tokens"] + u["completion_tokens"]
 
     @pytest.mark.asyncio
-    async def test_model_echoed(self):
+    async def test_model_echoed(self) -> None:
         async with make_client() as c:
             r = await c.post("/v1/chat/completions", json={**PAYLOAD, "model": "my-model"})
         assert r.json()["model"] == "my-model"
 
     @pytest.mark.asyncio
-    async def test_response_contains_prompt(self):
+    async def test_response_contains_prompt(self) -> None:
         payload = {**PAYLOAD, "messages": [{"role": "user", "content": "UniqueXYZ"}]}
         async with make_client() as c:
             r = await c.post("/v1/chat/completions", json=payload)
@@ -80,7 +80,7 @@ class TestMockResponseShape:
 
 class TestControlEndpoints:
     @pytest.mark.asyncio
-    async def test_stats_keys(self):
+    async def test_stats_keys(self) -> None:
         async with make_client() as c:
             r = await c.get("/control/stats")
         assert r.status_code == 200
@@ -88,7 +88,7 @@ class TestControlEndpoints:
         assert set(body.keys()) >= {"total_requests", "current_concurrent", "peak_concurrent", "status_counts"}
 
     @pytest.mark.asyncio
-    async def test_total_requests_incremented(self):
+    async def test_total_requests_incremented(self) -> None:
         async with make_client() as c:
             for _ in range(3):
                 await c.post("/v1/chat/completions", json=PAYLOAD)
@@ -96,7 +96,7 @@ class TestControlEndpoints:
         assert stats["total_requests"] == 3
 
     @pytest.mark.asyncio
-    async def test_reset_clears_stats(self):
+    async def test_reset_clears_stats(self) -> None:
         async with make_client() as c:
             await c.post("/v1/chat/completions", json=PAYLOAD)
             await c.post("/control/reset")
@@ -105,7 +105,7 @@ class TestControlEndpoints:
         assert stats["peak_concurrent"] == 0
 
     @pytest.mark.asyncio
-    async def test_status_counts_tracked(self):
+    async def test_status_counts_tracked(self) -> None:
         async with make_client() as c:
             await c.post("/v1/chat/completions", json=PAYLOAD)
             stats = (await c.get("/control/stats")).json()
@@ -113,7 +113,7 @@ class TestControlEndpoints:
         assert "200" in counts or 200 in counts
 
     @pytest.mark.asyncio
-    async def test_control_config_updates_error_rate(self):
+    async def test_control_config_updates_error_rate(self) -> None:
         async with make_client() as c:
             # Force 100% 429 rate
             r = await c.post("/control/config", json={"error_rate_429": 1.0})
@@ -122,7 +122,7 @@ class TestControlEndpoints:
             assert r2.status_code == 429
 
     @pytest.mark.asyncio
-    async def test_control_config_reset_reseeds(self):
+    async def test_control_config_reset_reseeds(self) -> None:
         async with make_client() as c:
             await c.post("/v1/chat/completions", json=PAYLOAD)
             await c.post("/control/reset")
@@ -137,7 +137,7 @@ class TestControlEndpoints:
 
 class TestPeakConcurrency:
     @pytest.mark.asyncio
-    async def test_peak_concurrent_exceeds_one(self):
+    async def test_peak_concurrent_exceeds_one(self) -> None:
         """
         Fires N concurrent requests. ASGITransport runs the ASGI app
         in the same event loop, so asyncio.gather produces genuine
@@ -165,7 +165,7 @@ class TestPeakConcurrency:
         )
 
     @pytest.mark.asyncio
-    async def test_capacity_gate_returns_503(self):
+    async def test_capacity_gate_returns_503(self) -> None:
         """When capacity_mode='reject' and all slots are taken, new requests get 503."""
         # capacity=1, latency long enough to queue, reject mode
         cfg = MockConfig(latency_mean=-3.0, latency_sigma=0.001, max_capacity=1, capacity_mode="reject")
@@ -183,7 +183,7 @@ class TestPeakConcurrency:
         assert 503 in statuses
 
     @pytest.mark.asyncio
-    async def test_capacity_mode_queue_waits_and_all_succeed(self):
+    async def test_capacity_mode_queue_waits_and_all_succeed(self) -> None:
         """When capacity_mode='queue' (default), concurrent requests beyond capacity wait and succeed."""
         cfg = MockConfig(latency_mean=-4.0, latency_sigma=0.001, max_capacity=1, capacity_mode="queue")
         app = create_app(cfg)
@@ -208,7 +208,7 @@ class TestPeakConcurrency:
 # ---------------------------------------------------------------------------
 
 class TestStats:
-    def test_peak_not_decremented(self):
+    def test_peak_not_decremented(self) -> None:
         s = Stats()
         s.record_start(); s.record_start(); s.record_start()
         assert s.peak_concurrent == 3
@@ -216,7 +216,7 @@ class TestStats:
         assert s.peak_concurrent == 3
         assert s.current_concurrent == 2
 
-    def test_reset(self):
+    def test_reset(self) -> None:
         s = Stats()
         s.record_start(); s.record_end(200)
         s.record_timing(0.01, 0.05)
@@ -234,7 +234,7 @@ class TestStats:
             "service_time": {"p50": 0.0, "p95": 0.0, "mean": 0.0},
         }
 
-    def test_injected_event_counters(self):
+    def test_injected_event_counters(self) -> None:
         s = Stats()
         s.injected_429 += 2
         s.injected_500 += 1
@@ -250,7 +250,7 @@ class TestStats:
         assert data["injected_drops"] == 1
         assert data["injected_slow_tails"] == 3
 
-    def test_timing_stats(self):
+    def test_timing_stats(self) -> None:
         s = Stats()
         s.record_timing(0.01, 0.10)
         s.record_timing(0.02, 0.20)
@@ -264,19 +264,19 @@ class TestStats:
 # ---------------------------------------------------------------------------
 
 class TestMockConfig:
-    def test_defaults(self):
+    def test_defaults(self) -> None:
         c = MockConfig()
         assert c.error_rate_429 == 0.0
         assert c.error_rate_500 == 0.0
         assert c.seed == 42
 
-    def test_direct_construction(self):
+    def test_direct_construction(self) -> None:
         c = MockConfig(latency_mean=1.0, latency_sigma=0.1, max_capacity=5)
         assert c.latency_mean == 1.0
         assert c.latency_sigma == 0.1
         assert c.max_capacity == 5
 
-    def test_from_env_reads_env_at_call_time(self, monkeypatch):
+    def test_from_env_reads_env_at_call_time(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """from_env() reads os.environ at call time — monkeypatch works correctly."""
         monkeypatch.setenv("MOCK_LATENCY_MEAN", "2.5")
         monkeypatch.setenv("MOCK_SEED", "99")
@@ -286,7 +286,7 @@ class TestMockConfig:
         assert c.seed == 99
         assert c.error_rate_429 == 0.3
 
-    def test_from_env_defaults_when_no_env(self, monkeypatch):
+    def test_from_env_defaults_when_no_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
         for key in ["MOCK_LATENCY_MEAN", "MOCK_SEED", "MOCK_ERROR_RATE_429",
                     "MOCK_ERROR_RATE_500", "MOCK_PORT", "MOCK_MAX_CAPACITY",
                     "MOCK_LATENCY_SIGMA", "MOCK_SLOW_TAIL_PROB", "MOCK_DROP_PROB", "MOCK_CAPACITY_MODE"]:
@@ -302,11 +302,11 @@ class TestMockConfig:
 # ---------------------------------------------------------------------------
 
 class TestMakeCompletionResponse:
-    def test_usage_consistent(self):
+    def test_usage_consistent(self) -> None:
         resp = _make_completion_response("m", "hello world", 50)
         u = resp["usage"]
         assert u["total_tokens"] == u["prompt_tokens"] + u["completion_tokens"]
 
-    def test_model_echoed(self):
+    def test_model_echoed(self) -> None:
         resp = _make_completion_response("my-model", "x", 10)
         assert resp["model"] == "my-model"
