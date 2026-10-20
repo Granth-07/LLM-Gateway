@@ -1,0 +1,270 @@
+{
+  "trial_name": "failures_v2_C50_t1",
+  "timestamp": 1792539345.1194165,
+  "python_version": "3.15.0 (main, Oct 14 2026, 01:12:50) [MSC v.1951 64 bit (AMD64)]",
+  "provider": {
+    "name": "mock",
+    "model": "mock-model",
+    "is_real": false
+  },
+  "config": {
+    "concurrency_C": 50,
+    "total_requests_N": 500,
+    "warmup_requests": 10,
+    "model": "mock-model",
+    "max_tokens": 128,
+    "timeout": 30.0,
+    "seed": 43,
+    "flags": {
+      "profile": "optimized",
+      "concurrency_limit": 50,
+      "queue_size": 200,
+      "reuse_http_client": true,
+      "pool_max_keepalive": 100,
+      "pool_max_connections": 100,
+      "release_slot_during_backoff": false
+    },
+    "mock_settings": {
+      "latency_mean": -1.20397,
+      "latency_sigma": 0.25,
+      "max_capacity": 100,
+      "capacity_mode": "queue",
+      "error_rate_429": 0.1,
+      "error_rate_500": 0.05,
+      "slow_tail_prob": 0.05,
+      "slow_tail_latency_s": 4.0,
+      "drop_prob": 0.02,
+      "seed": 42
+    }
+  },
+  "summary": {
+    "total_requests": 500,
+    "success_count": 497,
+    "error_count": 3,
+    "error_rate": 0.006,
+    "status_counts": {
+      "200": 497,
+      "429": 1,
+      "502": 2
+    },
+    "duration_seconds": 7.5856,
+    "throughput_rps": 65.52,
+    "connection_reused_fraction": 0.9115,
+    "connect_time_mean": 0.002522,
+    "client_gateway_gap": {
+      "p50": 0.009341,
+      "mean": 0.031079
+    },
+    "client_latency": {
+      "p50": 0.360236,
+      "p95": 1.993145,
+      "p99": 2.414805,
+      "mean": 0.580014,
+      "min": 0.183105,
+      "max": 3.206308
+    },
+    "gateway_latency": {
+      "total": {
+        "p50": 0.344658,
+        "p95": 1.945034,
+        "p99": 2.406882
+      },
+      "queue_wait": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      },
+      "client_setup": {
+        "p50": 2e-06,
+        "p95": 4e-06,
+        "p99": 6e-06
+      },
+      "provider_time": {
+        "p50": 0.331519,
+        "p95": 0.725668,
+        "p99": 1.956457
+      },
+      "connect_time": {
+        "p50": 0.0,
+        "p95": 0.030924,
+        "p99": 0.048586
+      },
+      "backoff_sleep": {
+        "p50": 0.0,
+        "p95": 1.005156,
+        "p99": 1.389432
+      },
+      "response_processing": {
+        "p50": 1.9e-05,
+        "p95": 4.1e-05,
+        "p99": 4.8e-05
+      },
+      "overhead": {
+        "p50": 1.5e-05,
+        "p95": 5.7e-05,
+        "p99": 0.000141
+      }
+    },
+    "checks": {
+      "latency_violations": 0,
+      "littles_law_L": 38.002,
+      "littles_law_C": 50,
+      "littles_law_delta": 11.998,
+      "gateway_peak_in_flight": 50,
+      "mock_peak_concurrent": 51
+    },
+    "error_kinds": {
+      "429": [
+        "rate_limit_exceeded"
+      ],
+      "502": [
+        "bad_gateway"
+      ]
+    },
+    "retry_after_present_on_429": true,
+    "last_error_body": "{\"error\":\"bad_gateway\",\"message\":\"Upstream provider returned an error\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-4-474\"}",
+    "client_latency_success": {
+      "p50": 0.360146,
+      "p95": 1.991249,
+      "p99": 2.480551
+    },
+    "backoff_sleep_429": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0
+    }
+  },
+  "gateway_metrics": {
+    "requests": {
+      "total": 510,
+      "successful": 507,
+      "failed": 3,
+      "rejected": 0,
+      "cancelled": 0
+    },
+    "counters": {
+      "attempts": {
+        "success": 507,
+        "timeout": 26,
+        "429": 53,
+        "5xx": 35,
+        "connection": 0,
+        "auth_4xx": 0
+      },
+      "finals": {
+        "success": 507,
+        "timeout": 0,
+        "429": 1,
+        "5xx": 2,
+        "connection": 0,
+        "auth_4xx": 0
+      },
+      "rejects": {
+        "queue_full": 0,
+        "queue_timeout": 0
+      },
+      "client_cancelled": 0
+    },
+    "rates": {
+      "attempt_error_rate": 0.1836,
+      "final_error_rate": 0.0059,
+      "throughput_rps": 70.56
+    },
+    "latency": {
+      "successful": {
+        "total": {
+          "p50": 0.346364,
+          "p95": 1.937117,
+          "p99": 2.380075
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 2e-06,
+          "p95": 4e-06,
+          "p99": 6e-06
+        },
+        "provider_time": {
+          "p50": 0.33436,
+          "p95": 0.706828,
+          "p99": 1.953966
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.031983,
+          "p99": 0.050196
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.005598,
+          "p99": 1.298841
+        },
+        "response_processing": {
+          "p50": 1.9e-05,
+          "p95": 4.1e-05,
+          "p99": 4.7e-05
+        },
+        "overhead": {
+          "p50": 1.5e-05,
+          "p95": 5.7e-05,
+          "p99": 0.00014
+        }
+      },
+      "failed": {
+        "count": 3,
+        "total": {
+          "p50": 1.986504,
+          "p95": 2.294303,
+          "p99": 2.294303
+        }
+      }
+    },
+    "limiter": {
+      "waiting": 0,
+      "slots_held": 0,
+      "in_flight": 0,
+      "peak_waiting": 0,
+      "peak_slots_held": 50,
+      "peak_in_flight": 50
+    },
+    "timing_integrity": {
+      "clamped_overhead_count": 0,
+      "mean_residual_delta": 0.0
+    },
+    "records_retained": 510,
+    "max_records": 10000
+  },
+  "mock_stats": {
+    "total_requests": 613,
+    "current_concurrent": 12,
+    "peak_concurrent": 51,
+    "status_counts": {
+      "429": 53,
+      "500": 27,
+      "200": 521
+    },
+    "injected": {
+      "429": 53,
+      "500": 27,
+      "drop": 8,
+      "slow_tail": 26
+    },
+    "injected_429": 53,
+    "injected_500": 27,
+    "injected_drops": 8,
+    "injected_slow_tails": 26,
+    "queue_wait": {
+      "p50": 3e-06,
+      "p95": 6e-06,
+      "mean": 3e-06
+    },
+    "service_time": {
+      "p50": 0.308012,
+      "p95": 0.497402,
+      "mean": 0.398639
+    }
+  }
+}

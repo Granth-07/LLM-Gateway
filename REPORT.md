@@ -41,7 +41,9 @@ Table below reproduces measured results under `capacity20` (mock capacity = 20, 
    - In pooled mode (`reuse_http_client=True`), `client_setup` and `connect_time` drop to 0.0000s [Measured].
    - Under limiter saturation (overflow C=50), `queue_wait` spikes to p95 0.526s, accounting for the delay prior to rejection [Measured].
 4. **Failure Modes Under Load**:
-   - In `failures` scenario, 429 and 500 errors trigger exponential backoff retry loops up to max 3 attempts [Measured].
+   - In earlier `failures`, timeouts never triggered because slow-tail latency (~0.9s) never reached the 30.0s gateway timeout [Measured].
+   - In `failures_v2` (REQUEST_TIMEOUT=1.5s, slow-tail=4.0s), 4s latency spikes successfully triggered gateway timeouts: 26 timeout attempts at C=10 (3 final failures) and 73 timeout attempts at C=50 (9 final failures) [Measured]. Over 87% of timeout attempts recovered on subsequent retries [Measured].
+   - Retry budget enforcement (20% + 10 floor = 110 max retries per 500 requests) bounded retries under compounding errors at C=50, preventing cascading retry storms while allowing 1.207 attempts/request [Measured]. Retried requests experienced median backoff sleep of 1.0008s (C=10) and 1.0005s (C=50), driven by 429 Retry-After headers [Measured].
    - In `overflow` (C=50, limit=10, queue=10), 90 of 110 requests (81%) were deliberate HTTP 503 limiter rejections, not provider failures [Measured]. Closed-loop client workers resubmit immediately upon rejection [Measured].
 5. **Impact of Architectural Optimizations**:
    - In capacity-bound regime (`capacity20`), connection reuse gave modest gains: 53.1 $\to$ 56.5 rps and p95 1.27 $\to$ 1.00s [Measured].
@@ -58,10 +60,11 @@ Table below reproduces measured results under `capacity20` (mock capacity = 20, 
    - Add upstream error-body inspection to classify unrecoverable errors (e.g. quota/credit exhaustion) as fatal non-retryable [Measured].
    - Configure bounded admission queues with adaptive `Retry-After` signaling [Measured].
 
-## 5. Step 0 Failure-Rate & Error Accounting Findings
-- **Configured vs. Observed**: Configured rates were 10% 429, 5% 500, 5% slow-tail (3x latency), 2% drop [Measured]. Observed per-attempt failure rate was 15.60% (88/564 attempts) at C=10 and 14.92% (268/1796 attempts) at C=50, aligning with configured error injection (~15-17%) [Measured].
-- **Gateway vs. Mock Counts**: At C=10, gateway 429 attempts matched mock injected 429s exactly (59 vs 59 across 3 trials) [Measured]. Gateway recorded 29 5xx attempts vs 19 mock-logged 500s [Measured]. Mock `/control/stats` does not count connection drops (raises `RuntimeError` before `record_start()`) and does not count timeouts [Measured].
-- **Zero Timeout Attempts**: Gateway `request_timeout` is 30.0s [Measured]. Injected slow tail multiplied median latency (~0.3s) by 3.0 to ~0.9s (max observed ~2.0s), never exceeding 30.0s [Measured]. Slow tail requests succeeded with elevated latency rather than timing out, confirming absence of timeout attempts is expected under this scenario [Measured].
+## 5. Failure-Rate Accounting & Injection Mechanics
+- **Configured vs. Mock-Injected Counts**: In `failures_v2`, configured fault rates (10% 429, 5% 500, 2% drop, 5% slow-tail) yielded exact mock server injection counts across 3 trials: 63 429s, 18 500s, 12 drops, 26 slow-tails at C=10 (N=480); 162 429s, 80 500s, 27 drops, 73 slow-tails at C=50 (N=1530) [Measured].
+- **Gateway Attempt Matching**: Gateway attempt counts matched mock injections with precision: 429 attempts matched 63/63 (C=10) and 162/162 (C=50); timeout attempts matched slow-tails 26/26 (C=10) and 73/73 (C=50) [Measured].
+- **Resolution of Injected Drops vs. 5xx/Connection Errors**: Rather than connection errors inherently scaling with load, mock drops (`RuntimeError`) are intercepted by ASGI server middleware and returned as HTTP 500 unless an abrupt TCP reset occurs [Measured]. At C=10, all 12 injected drops surfaced as HTTP 500s (18 mock 500s + 12 drops = 30 gateway 5xx attempts; 0 connection attempts) [Measured]. At C=50, of 27 injected drops, 12 surfaced as connection drops and 15 surfaced as 5xx attempts (80 mock 500s + 15 drops = 95 gateway 5xx attempts) [Measured]. This fully explains the earlier 5xx discrepancy (29 vs 19 at C=10, 90 vs 81 at C=50) [Measured].
+- **Final Outcomes & Latency**: Final unrecovered failures remained minimal: 3 timeouts, 6 429s, 5 5xx at C=10; 9 timeouts, 9 429s, 8 5xx at C=50 (0 connection failures) [Measured]. Client latency medians under `failures_v2` were: C=10 p50 0.348s, p95 2.169s, p99 2.644s (throughput 14.54 rps); C=50 p50 0.361s, p95 1.993s, p99 2.540s (throughput 65.52 rps) [Measured]. Unverifiable without kernel packet capture: the exact TCP socket conditions that cause uvicorn to reset a connection versus completing a 500 response on unhandled exceptions [Hypothesis].
 
 ## 6. Root Cause Bottleneck Diagnoses
 - **Capacity-Bound Regime**: Throughput ceiling (~56 rps) is dictated entirely by upstream provider capacity (mock capacity 20 / 0.35s service time) [Measured]. Client pooling cannot exceed upstream capacity [Measured].

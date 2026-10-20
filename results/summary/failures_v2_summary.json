@@ -1,0 +1,608 @@
+{
+  "timestamp": 1792539411.5140386,
+  "total_runtime_seconds": 168.46,
+  "cooldown_seconds": 20.0,
+  "trials": [
+    {
+      "total_requests": 150,
+      "success_count": 148,
+      "error_count": 2,
+      "error_rate": 0.0133,
+      "status_counts": {
+        "200": 148,
+        "502": 1,
+        "504": 1
+      },
+      "duration_seconds": 11.9951,
+      "throughput_rps": 12.34,
+      "connection_reused_fraction": 0.9459,
+      "connect_time_mean": 0.000137,
+      "client_gateway_gap": {
+        "p50": 0.005247,
+        "mean": 0.005642
+      },
+      "client_latency": {
+        "p50": 0.348272,
+        "p95": 2.16881,
+        "p99": 2.829579,
+        "mean": 0.569701,
+        "min": 0.169679,
+        "max": 4.46575
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.33803,
+          "p95": 2.065573,
+          "p99": 2.797617
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 3e-06,
+          "p95": 6e-06,
+          "p99": 9e-06
+        },
+        "provider_time": {
+          "p50": 0.321733,
+          "p95": 0.606038,
+          "p99": 1.876634
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.000729,
+          "p99": 0.00452
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.004521,
+          "p99": 1.150663
+        },
+        "response_processing": {
+          "p50": 3e-05,
+          "p95": 5.4e-05,
+          "p99": 6.7e-05
+        },
+        "overhead": {
+          "p50": 2.2e-05,
+          "p95": 7.7e-05,
+          "p99": 0.000122
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 7.0292,
+        "littles_law_C": 10,
+        "littles_law_delta": 2.9708,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 12
+      },
+      "error_kinds": {
+        "502": [
+          "bad_gateway"
+        ],
+        "504": [
+          "upstream_timeout"
+        ]
+      },
+      "retry_after_present_on_429": false,
+      "last_error_body": "{\"error\":\"upstream_timeout\",\"message\":\"Upstream provider timed out\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-3-150\"}",
+      "client_latency_success": {
+        "p50": 0.347856,
+        "p95": 2.069049,
+        "p99": 2.802742
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    {
+      "total_requests": 150,
+      "success_count": 146,
+      "error_count": 4,
+      "error_rate": 0.0267,
+      "status_counts": {
+        "200": 146,
+        "429": 2,
+        "502": 1,
+        "504": 1
+      },
+      "duration_seconds": 10.0402,
+      "throughput_rps": 14.54,
+      "connection_reused_fraction": 0.9521,
+      "connect_time_mean": 7.2e-05,
+      "client_gateway_gap": {
+        "p50": 0.004969,
+        "mean": 0.00537
+      },
+      "client_latency": {
+        "p50": 0.346074,
+        "p95": 2.21329,
+        "p99": 2.519111,
+        "mean": 0.531645,
+        "min": 0.006324,
+        "max": 2.916354
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.340968,
+          "p95": 2.010595,
+          "p99": 2.472399
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 3e-06,
+          "p95": 6e-06,
+          "p99": 8e-06
+        },
+        "provider_time": {
+          "p50": 0.329454,
+          "p95": 0.576091,
+          "p99": 1.876755
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.001562
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.001219,
+          "p99": 2.012718
+        },
+        "response_processing": {
+          "p50": 2.6e-05,
+          "p95": 6.4e-05,
+          "p99": 8.2e-05
+        },
+        "overhead": {
+          "p50": 2e-05,
+          "p95": 6.8e-05,
+          "p99": 0.00011
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 7.731,
+        "littles_law_C": 10,
+        "littles_law_delta": 2.269,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 12
+      },
+      "error_kinds": {
+        "429": [
+          "rate_limit_exceeded"
+        ],
+        "502": [
+          "bad_gateway"
+        ],
+        "504": [
+          "upstream_timeout"
+        ]
+      },
+      "retry_after_present_on_429": true,
+      "last_error_body": "{\"error\":\"upstream_timeout\",\"message\":\"Upstream provider timed out\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-9-152\"}",
+      "client_latency_success": {
+        "p50": 0.346074,
+        "p95": 2.018259,
+        "p99": 2.479699
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      }
+    },
+    {
+      "total_requests": 150,
+      "success_count": 146,
+      "error_count": 4,
+      "error_rate": 0.0267,
+      "status_counts": {
+        "200": 146,
+        "429": 2,
+        "502": 1,
+        "504": 1
+      },
+      "duration_seconds": 9.2897,
+      "throughput_rps": 15.72,
+      "connection_reused_fraction": 0.9589,
+      "connect_time_mean": 0.000134,
+      "client_gateway_gap": {
+        "p50": 0.006696,
+        "mean": 0.007558
+      },
+      "client_latency": {
+        "p50": 0.349135,
+        "p95": 2.008031,
+        "p99": 2.644427,
+        "mean": 0.544448,
+        "min": 0.008465,
+        "max": 3.058525
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.341306,
+          "p95": 2.002258,
+          "p99": 2.63952
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 4e-06,
+          "p95": 6e-06,
+          "p99": 8e-06
+        },
+        "provider_time": {
+          "p50": 0.32921,
+          "p95": 0.606896,
+          "p99": 1.886883
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.005423
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.01312,
+          "p99": 2.00731
+        },
+        "response_processing": {
+          "p50": 4.4e-05,
+          "p95": 5.8e-05,
+          "p99": 7.9e-05
+        },
+        "overhead": {
+          "p50": 2.9e-05,
+          "p95": 8.6e-05,
+          "p99": 0.000159
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 8.5568,
+        "littles_law_C": 10,
+        "littles_law_delta": 1.4432,
+        "gateway_peak_in_flight": 10,
+        "mock_peak_concurrent": 12
+      },
+      "error_kinds": {
+        "429": [
+          "rate_limit_exceeded"
+        ],
+        "502": [
+          "bad_gateway"
+        ],
+        "504": [
+          "upstream_timeout"
+        ]
+      },
+      "retry_after_present_on_429": true,
+      "last_error_body": "{\"error\":\"upstream_timeout\",\"message\":\"Upstream provider timed out\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-7-75\"}",
+      "client_latency_success": {
+        "p50": 0.349135,
+        "p95": 2.008031,
+        "p99": 2.644427
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      }
+    },
+    {
+      "total_requests": 500,
+      "success_count": 497,
+      "error_count": 3,
+      "error_rate": 0.006,
+      "status_counts": {
+        "200": 497,
+        "429": 1,
+        "502": 2
+      },
+      "duration_seconds": 7.5856,
+      "throughput_rps": 65.52,
+      "connection_reused_fraction": 0.9115,
+      "connect_time_mean": 0.002522,
+      "client_gateway_gap": {
+        "p50": 0.009341,
+        "mean": 0.031079
+      },
+      "client_latency": {
+        "p50": 0.360236,
+        "p95": 1.993145,
+        "p99": 2.414805,
+        "mean": 0.580014,
+        "min": 0.183105,
+        "max": 3.206308
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.344658,
+          "p95": 1.945034,
+          "p99": 2.406882
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 2e-06,
+          "p95": 4e-06,
+          "p99": 6e-06
+        },
+        "provider_time": {
+          "p50": 0.331519,
+          "p95": 0.725668,
+          "p99": 1.956457
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.030924,
+          "p99": 0.048586
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.005156,
+          "p99": 1.389432
+        },
+        "response_processing": {
+          "p50": 1.9e-05,
+          "p95": 4.1e-05,
+          "p99": 4.8e-05
+        },
+        "overhead": {
+          "p50": 1.5e-05,
+          "p95": 5.7e-05,
+          "p99": 0.000141
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 38.002,
+        "littles_law_C": 50,
+        "littles_law_delta": 11.998,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 51
+      },
+      "error_kinds": {
+        "429": [
+          "rate_limit_exceeded"
+        ],
+        "502": [
+          "bad_gateway"
+        ]
+      },
+      "retry_after_present_on_429": true,
+      "last_error_body": "{\"error\":\"bad_gateway\",\"message\":\"Upstream provider returned an error\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-4-474\"}",
+      "client_latency_success": {
+        "p50": 0.360146,
+        "p95": 1.991249,
+        "p99": 2.480551
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      }
+    },
+    {
+      "total_requests": 500,
+      "success_count": 490,
+      "error_count": 10,
+      "error_rate": 0.02,
+      "status_counts": {
+        "200": 490,
+        "504": 5,
+        "502": 3,
+        "429": 2
+      },
+      "duration_seconds": 18.644,
+      "throughput_rps": 26.28,
+      "connection_reused_fraction": 0.8612,
+      "connect_time_mean": 0.013169,
+      "client_gateway_gap": {
+        "p50": 0.15848,
+        "mean": 0.138556
+      },
+      "client_latency": {
+        "p50": 0.918045,
+        "p95": 5.83828,
+        "p99": 8.513105,
+        "mean": 1.703654,
+        "min": 0.176813,
+        "max": 11.242743
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.695749,
+          "p95": 5.466555,
+          "p99": 7.572409
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 6e-06,
+          "p95": 1.2e-05,
+          "p99": 1.5e-05
+        },
+        "provider_time": {
+          "p50": 0.648216,
+          "p95": 4.890995,
+          "p99": 6.835447
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.134592,
+          "p99": 0.182195
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.047018,
+          "p99": 1.972723
+        },
+        "response_processing": {
+          "p50": 4.7e-05,
+          "p95": 7.7e-05,
+          "p99": 0.000109
+        },
+        "overhead": {
+          "p50": 3.8e-05,
+          "p95": 0.000125,
+          "p99": 0.000201
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 44.7752,
+        "littles_law_C": 50,
+        "littles_law_delta": 5.2248,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 42
+      },
+      "error_kinds": {
+        "504": [
+          "upstream_timeout"
+        ],
+        "502": [
+          "bad_gateway"
+        ],
+        "429": [
+          "rate_limit_exceeded"
+        ]
+      },
+      "retry_after_present_on_429": true,
+      "last_error_body": "{\"error\":\"upstream_timeout\",\"message\":\"Upstream provider timed out\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-17-412\"}",
+      "client_latency_success": {
+        "p50": 0.903031,
+        "p95": 5.644086,
+        "p99": 7.689773
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      }
+    },
+    {
+      "total_requests": 500,
+      "success_count": 487,
+      "error_count": 13,
+      "error_rate": 0.026,
+      "status_counts": {
+        "429": 6,
+        "502": 3,
+        "200": 487,
+        "504": 4
+      },
+      "duration_seconds": 7.3235,
+      "throughput_rps": 66.5,
+      "connection_reused_fraction": 0.9261,
+      "connect_time_mean": 0.002405,
+      "client_gateway_gap": {
+        "p50": 0.008798,
+        "mean": 0.031936
+      },
+      "client_latency": {
+        "p50": 0.361,
+        "p95": 1.671672,
+        "p99": 2.540041,
+        "mean": 0.561271,
+        "min": 0.01531,
+        "max": 4.04476
+      },
+      "gateway_latency": {
+        "total": {
+          "p50": 0.345189,
+          "p95": 1.467085,
+          "p99": 2.382278
+        },
+        "queue_wait": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "client_setup": {
+          "p50": 2e-06,
+          "p95": 4e-06,
+          "p99": 7e-06
+        },
+        "provider_time": {
+          "p50": 0.33443,
+          "p95": 0.591132,
+          "p99": 1.896819
+        },
+        "connect_time": {
+          "p50": 0.0,
+          "p95": 0.028344,
+          "p99": 0.067309
+        },
+        "backoff_sleep": {
+          "p50": 0.0,
+          "p95": 1.004084,
+          "p99": 1.565039
+        },
+        "response_processing": {
+          "p50": 2e-05,
+          "p95": 4e-05,
+          "p99": 5.2e-05
+        },
+        "overhead": {
+          "p50": 1.7e-05,
+          "p95": 5.2e-05,
+          "p99": 0.000112
+        }
+      },
+      "checks": {
+        "latency_violations": 0,
+        "littles_law_L": 37.3238,
+        "littles_law_C": 50,
+        "littles_law_delta": 12.6762,
+        "gateway_peak_in_flight": 50,
+        "mock_peak_concurrent": 49
+      },
+      "error_kinds": {
+        "429": [
+          "rate_limit_exceeded"
+        ],
+        "502": [
+          "bad_gateway"
+        ],
+        "504": [
+          "upstream_timeout"
+        ]
+      },
+      "retry_after_present_on_429": true,
+      "last_error_body": "{\"error\":\"upstream_timeout\",\"message\":\"Upstream provider timed out\",\"retryable\":true,\"retry_after\":null,\"request_id\":\"bench-13-444\"}",
+      "client_latency_success": {
+        "p50": 0.361,
+        "p95": 1.517541,
+        "p99": 2.809446
+      },
+      "backoff_sleep_429": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0
+      }
+    }
+  ]
+}

@@ -41,6 +41,7 @@ class ServerConfig:
     mock_error_rate_429: float = 0.0
     mock_error_rate_500: float = 0.0
     mock_slow_tail_prob: float = 0.0
+    mock_slow_tail_latency_s: float = 0.0
     mock_drop_prob: float = 0.0
     mock_seed: int = 42
 
@@ -129,6 +130,8 @@ class SubprocessManager:
             str(self.cfg.mock_error_rate_500),
             "--slow-tail-prob",
             str(self.cfg.mock_slow_tail_prob),
+            "--slow-tail-latency-s",
+            str(self.cfg.mock_slow_tail_latency_s),
             "--drop-prob",
             str(self.cfg.mock_drop_prob),
             "--seed",
@@ -518,6 +521,7 @@ async def run_trial(
                     "error_rate_429": server_cfg.mock_error_rate_429,
                     "error_rate_500": server_cfg.mock_error_rate_500,
                     "slow_tail_prob": server_cfg.mock_slow_tail_prob,
+                    "slow_tail_latency_s": server_cfg.mock_slow_tail_latency_s,
                     "drop_prob": server_cfg.mock_drop_prob,
                     "seed": server_cfg.mock_seed,
                 } if not server_cfg.is_real else {},

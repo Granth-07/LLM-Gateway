@@ -223,7 +223,7 @@ async def test_worker_count_bounded_at_c() -> None:
     # Run closed-loop workload with patched client
     import unittest.mock
     with unittest.mock.patch("httpx.AsyncClient", side_effect=mock_client_factory):
-        records, start, end = await runner_mod.run_closed_loop_workload("http://testserver", workload)
+        records, start, end, success, msg = await runner_mod.run_closed_loop_workload("http://testserver", workload)
 
     # Total records = warmup + measured
     assert len(records) == n_requests + warmup

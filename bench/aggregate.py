@@ -323,7 +323,7 @@ def generate_markdown_tables(results_dir: Path | str = "results") -> str:
     for f in matrix_files:
         if f.name.endswith("_run1.json") or f.name.endswith("_run2.json") or f.name.startswith("cap20_diag"):
             continue
-        if f.name in ("matrix_summary.json", "experiments_summary.json"):
+        if f.name in ("matrix_summary.json", "experiments_summary.json", "failures_v2_summary.json", "capacity20_rerun_summary.json"):
             continue
         if f.name.startswith("Exp1_") or f.name.startswith("Exp2_") or f.name.startswith("Exp3_"):
             continue

@@ -220,13 +220,35 @@ class TestStats:
         s = Stats()
         s.record_start(); s.record_end(200)
         s.record_timing(0.01, 0.05)
+        s.injected_429 = 3
+        s.injected_500 = 2
+        s.injected_drops = 1
+        s.injected_slow_tails = 4
         s.reset()
         assert s.as_dict() == {
             "total_requests": 0, "current_concurrent": 0,
             "peak_concurrent": 0, "status_counts": {},
+            "injected": {"429": 0, "500": 0, "drop": 0, "slow_tail": 0},
+            "injected_429": 0, "injected_500": 0, "injected_drops": 0, "injected_slow_tails": 0,
             "queue_wait": {"p50": 0.0, "p95": 0.0, "mean": 0.0},
             "service_time": {"p50": 0.0, "p95": 0.0, "mean": 0.0},
         }
+
+    def test_injected_event_counters(self):
+        s = Stats()
+        s.injected_429 += 2
+        s.injected_500 += 1
+        s.injected_drops += 1
+        s.injected_slow_tails += 3
+        data = s.as_dict()
+        assert data["injected"]["429"] == 2
+        assert data["injected"]["500"] == 1
+        assert data["injected"]["drop"] == 1
+        assert data["injected"]["slow_tail"] == 3
+        assert data["injected_429"] == 2
+        assert data["injected_500"] == 1
+        assert data["injected_drops"] == 1
+        assert data["injected_slow_tails"] == 3
 
     def test_timing_stats(self):
         s = Stats()

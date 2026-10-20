@@ -82,6 +82,9 @@ The gateway strictly distinguishes between **attempt-level events**, **final req
 - **Provider Failures**:
   - Occur **after** acquiring a concurrency slot.
   - Either non-retryable errors (e.g., auth failure, 4xx) or retryable errors whose retry budget, max attempts, or total deadline were exhausted.
+- **Simulated Connection Drops in Mock Provider**:
+  - The mock simulates connection drops by raising `RuntimeError("Simulated connection drop")` before acquiring an internal capacity slot.
+  - Depending on ASGI/uvicorn transport framing and socket state when the exception is raised, this unhandled error may either abruptly reset/terminate the TCP stream (surfacing at the gateway client as a `connection` error, e.g., `httpx.RemoteProtocolError` or `ConnectError`) or be intercepted by the ASGI server's top-level error handler and returned as an HTTP 500 response (surfacing at the gateway as a `5xx` attempt). Both are retryable by the gateway core.
 - **Client Cancellations (`counters.client_cancelled`)**:
   - Occur when the HTTP client disconnects while the request is queued or in-flight.
   - Promptly cancels upstream work, releases the concurrency slot, and increments `client_cancelled`.

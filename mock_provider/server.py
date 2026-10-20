@@ -41,6 +41,7 @@ class MockConfig:
     error_rate_429: float = 0.0
     error_rate_500: float = 0.0
     slow_tail_prob: float = 0.0
+    slow_tail_latency_s: float = 0.0
     drop_prob: float = 0.0
     seed: int = 42
 
@@ -56,6 +57,7 @@ class MockConfig:
             error_rate_429=float(os.environ.get("MOCK_ERROR_RATE_429", "0.0")),
             error_rate_500=float(os.environ.get("MOCK_ERROR_RATE_500", "0.0")),
             slow_tail_prob=float(os.environ.get("MOCK_SLOW_TAIL_PROB", "0.0")),
+            slow_tail_latency_s=float(os.environ.get("MOCK_SLOW_TAIL_LATENCY_S", "0.0")),
             drop_prob=float(os.environ.get("MOCK_DROP_PROB", "0.0")),
             seed=int(os.environ.get("MOCK_SEED", "42")),
         )
@@ -73,6 +75,10 @@ class Stats:
     status_counts: dict[int, int] = field(default_factory=dict)
     queue_waits: list[float] = field(default_factory=list)
     service_times: list[float] = field(default_factory=list)
+    injected_429: int = 0
+    injected_500: int = 0
+    injected_drops: int = 0
+    injected_slow_tails: int = 0
 
     def record_start(self) -> None:
         self.total_requests += 1
@@ -95,6 +101,10 @@ class Stats:
         self.status_counts = {}
         self.queue_waits = []
         self.service_times = []
+        self.injected_429 = 0
+        self.injected_500 = 0
+        self.injected_drops = 0
+        self.injected_slow_tails = 0
 
     def _calc_stats(self, values: list[float]) -> dict[str, float]:
         if not values:
@@ -122,6 +132,16 @@ class Stats:
             "current_concurrent": self.current_concurrent,
             "peak_concurrent": self.peak_concurrent,
             "status_counts": dict(self.status_counts),
+            "injected": {
+                "429": self.injected_429,
+                "500": self.injected_500,
+                "drop": self.injected_drops,
+                "slow_tail": self.injected_slow_tails,
+            },
+            "injected_429": self.injected_429,
+            "injected_500": self.injected_500,
+            "injected_drops": self.injected_drops,
+            "injected_slow_tails": self.injected_slow_tails,
             "queue_wait": self._calc_stats(self.queue_waits),
             "service_time": self._calc_stats(self.service_times),
         }
@@ -155,6 +175,9 @@ class AppState:
     def sample_latency(self) -> float:
         base = self.rng.lognormvariate(self.config.latency_mean, self.config.latency_sigma)
         if self.rng.random() < self.config.slow_tail_prob:
+            self.stats.injected_slow_tails += 1
+            if self.config.slow_tail_latency_s > 0.0:
+                return self.config.slow_tail_latency_s
             base *= 3.0
         return base
 
@@ -191,10 +214,12 @@ def create_app(config: MockConfig | None = None) -> FastAPI:
 
         # Connection drop (before acquiring slot)
         if state.rng.random() < state.config.drop_prob:
+            state.stats.injected_drops += 1
             raise RuntimeError("Simulated connection drop")
 
         # 429 simulation
         if state.rng.random() < state.config.error_rate_429:
+            state.stats.injected_429 += 1
             state.stats.total_requests += 1
             state.stats.status_counts[429] = state.stats.status_counts.get(429, 0) + 1
             return JSONResponse(
@@ -223,6 +248,7 @@ def create_app(config: MockConfig | None = None) -> FastAPI:
                 t_service_start = t_acquired
                 try:
                     if state.rng.random() < state.config.error_rate_500:
+                        state.stats.injected_500 += 1
                         status = 500
                         return JSONResponse(
                             status_code=500,
@@ -297,6 +323,8 @@ def create_app(config: MockConfig | None = None) -> FastAPI:
             cfg.error_rate_500 = float(body["error_rate_500"])
         if "slow_tail_prob" in body:
             cfg.slow_tail_prob = float(body["slow_tail_prob"])
+        if "slow_tail_latency_s" in body:
+            cfg.slow_tail_latency_s = float(body["slow_tail_latency_s"])
         if "drop_prob" in body:
             cfg.drop_prob = float(body["drop_prob"])
         if "seed" in body:
@@ -310,6 +338,7 @@ def create_app(config: MockConfig | None = None) -> FastAPI:
             "error_rate_429": cfg.error_rate_429,
             "error_rate_500": cfg.error_rate_500,
             "slow_tail_prob": cfg.slow_tail_prob,
+            "slow_tail_latency_s": cfg.slow_tail_latency_s,
             "drop_prob": cfg.drop_prob,
         }})
 
@@ -372,6 +401,7 @@ def _parse_args() -> MockConfig:
     parser.add_argument("--error-rate-429", type=float, default=float(os.environ.get("MOCK_ERROR_RATE_429", "0.0")))
     parser.add_argument("--error-rate-500", type=float, default=float(os.environ.get("MOCK_ERROR_RATE_500", "0.0")))
     parser.add_argument("--slow-tail-prob", type=float, default=float(os.environ.get("MOCK_SLOW_TAIL_PROB", "0.0")))
+    parser.add_argument("--slow-tail-latency-s", type=float, default=float(os.environ.get("MOCK_SLOW_TAIL_LATENCY_S", "0.0")))
     parser.add_argument("--drop-prob", type=float, default=float(os.environ.get("MOCK_DROP_PROB", "0.0")))
     parser.add_argument("--seed", type=int, default=int(os.environ.get("MOCK_SEED", "42")))
     args = parser.parse_args()
@@ -384,6 +414,7 @@ def _parse_args() -> MockConfig:
         error_rate_429=args.error_rate_429,
         error_rate_500=args.error_rate_500,
         slow_tail_prob=args.slow_tail_prob,
+        slow_tail_latency_s=args.slow_tail_latency_s,
         drop_prob=args.drop_prob,
         seed=args.seed,
     )

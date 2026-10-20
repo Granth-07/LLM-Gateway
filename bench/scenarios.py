@@ -80,6 +80,18 @@ def get_scenario_server_config(
         base.concurrency_limit = 50
         base.queue_size = 200
 
+    elif scenario_name == "failures_v2":
+        base.mock_max_capacity = 100
+        base.mock_capacity_mode = "queue"
+        base.mock_error_rate_429 = 0.10
+        base.mock_error_rate_500 = 0.05
+        base.mock_slow_tail_prob = 0.05
+        base.mock_slow_tail_latency_s = 4.0
+        base.mock_drop_prob = 0.02
+        base.concurrency_limit = 50
+        base.queue_size = 200
+        base.request_timeout = 1.5
+
     elif scenario_name == "overflow":
         base.mock_max_capacity = 100
         base.mock_capacity_mode = "queue"
@@ -400,6 +412,90 @@ async def rerun_capacity20(
     return final_output
 
 
+async def run_failures_v2(
+    *,
+    results_dir: Path = DEFAULT_RESULTS_DIR,
+    mock_port: int = 9000,
+    gateway_port: int = 8000,
+    seed: int = FIXED_SEED,
+    cooldown_seconds: float = 20.0,
+) -> dict[str, Any]:
+    """
+    Run failures_v2 scenario:
+    - 429 10% with Retry-After, 500 5%, drop 2%, slow tail 5% at 4s
+    - Gateway REQUEST_TIMEOUT = 1.5s (triggers real timeouts on slow tail)
+    - Mock capacity 100, optimized profile
+    - C=10 (N=150) and C=50 (N=500), 3 trials each, 20s cooldown between trials
+    - Preserves older results
+    """
+    sum_dir = results_dir / "summary"
+    raw_dir = results_dir / "raw"
+    sum_dir.mkdir(parents=True, exist_ok=True)
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    items = [
+        (10, 150),
+        (50, 500),
+    ]
+
+    all_trials: list[dict[str, Any]] = []
+    t_start = time.perf_counter()
+
+    for c_val, n_req in items:
+        server_cfg = get_scenario_server_config(
+            "failures_v2",
+            profile="optimized",
+            mock_port=mock_port,
+            gateway_port=gateway_port,
+            seed=seed,
+        )
+
+        subproc = SubprocessManager(server_cfg)
+        subproc.start_mock()
+        subproc.start_gateway()
+        healthy = await subproc.wait_healthy()
+        if not healthy:
+            subproc.shutdown()
+            raise RuntimeError(f"Server failed to start for failures_v2 C={c_val}")
+
+        try:
+            for t_idx in range(1, 4):
+                trial_name = f"failures_v2_C{c_val}_t{t_idx}"
+                workload_cfg = WorkloadConfig(
+                    concurrency=c_val,
+                    total_requests=n_req,
+                    warmup_requests=10,
+                    seed=seed + t_idx,
+                )
+                print(f"\n[FAILURES_V2] Running {trial_name} (C={c_val}, N={n_req}, timeout=1.5s, slow_tail=4.0s)...")
+                res = await run_trial(
+                    server_cfg,
+                    workload_cfg,
+                    trial_name=trial_name,
+                    results_dir=results_dir,
+                    subproc_mgr=subproc,
+                )
+                all_trials.append(res)
+                if t_idx < 3 or (c_val != items[-1][0]):
+                    if cooldown_seconds > 0:
+                        print(f"Cooling down for {cooldown_seconds}s before next trial...")
+                        await asyncio.sleep(cooldown_seconds)
+        finally:
+            subproc.shutdown()
+
+    total_duration = time.perf_counter() - t_start
+    final_output = {
+        "timestamp": time.time(),
+        "total_runtime_seconds": round(total_duration, 2),
+        "cooldown_seconds": cooldown_seconds,
+        "trials": [t["summary"] for t in all_trials],
+    }
+
+    out_file = sum_dir / "failures_v2_summary.json"
+    out_file.write_text(json.dumps(final_output, indent=2), encoding="utf-8")
+    return final_output
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run LLM Gateway Benchmark Matrix")
     parser.add_argument("--mock-port", type=int, default=9000)
@@ -407,6 +503,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=FIXED_SEED)
     parser.add_argument("--cooldown", type=float, default=20.0, help="Cooldown between trials in seconds")
     parser.add_argument("--rerun-capacity20", action="store_true", help="Rerun capacity20 optimized (C=1,10,25,50) and baseline (C=50)")
+    parser.add_argument("--run-failures-v2", action="store_true", help="Run failures_v2 (C=10, 50, 3 trials each, 20s cooldown)")
     args = parser.parse_args()
 
     if args.rerun_capacity20:
@@ -420,6 +517,17 @@ def main() -> None:
             )
         )
         print(f"Capacity20 rerun complete in {out['total_runtime_seconds']}s")
+    elif args.run_failures_v2:
+        print("Launching failures_v2 benchmark (C=10, C=50, 3 trials each, 20s cooldown)...")
+        out = asyncio.run(
+            run_failures_v2(
+                mock_port=args.mock_port,
+                gateway_port=args.gateway_port,
+                seed=args.seed,
+                cooldown_seconds=args.cooldown,
+            )
+        )
+        print(f"failures_v2 benchmark complete in {out['total_runtime_seconds']}s")
     else:
         print("Launching full benchmark matrix...")
         out = asyncio.run(
