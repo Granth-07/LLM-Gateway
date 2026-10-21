@@ -106,8 +106,8 @@ class SubprocessManager:
     def __init__(self, cfg: ServerConfig, python_exe: str = sys.executable) -> None:
         self.cfg = cfg
         self.python_exe = python_exe
-        self.mock_proc: Optional[subprocess.Popen] = None
-        self.gateway_proc: Optional[subprocess.Popen] = None
+        self.mock_proc: Optional[subprocess.Popen[Any]] = None
+        self.gateway_proc: Optional[subprocess.Popen[Any]] = None
 
     def start_mock(self) -> None:
         if self.cfg.is_real:
