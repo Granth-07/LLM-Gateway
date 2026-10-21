@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------------------------
     provider_name: str = Field(default="mock", description="Registered provider key")
     provider_base_url: str = Field(
-        default="http://localhost:9000",
+        default="http://127.0.0.1:9000",
         description="Base URL for the upstream provider (no trailing slash)",
     )
     provider_api_key: str = Field(

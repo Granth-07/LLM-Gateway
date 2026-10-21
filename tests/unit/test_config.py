@@ -16,7 +16,7 @@ class TestSettingsDefaults:
 
     def test_default_base_url(self):
         s = Settings()
-        assert s.provider_base_url == "http://localhost:9000"
+        assert s.provider_base_url == "http://127.0.0.1:9000"
 
     def test_default_api_key_empty(self):
         s = Settings()

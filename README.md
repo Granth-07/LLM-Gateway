@@ -22,7 +22,7 @@ Start gateway (reads `.env` or defaults to mock):
 ```
 Curl completion request:
 ```powershell
-curl -X POST http://localhost:8000/v1/chat/completions -H "Content-Type: application/json" -d "{\"model\":\"mock-model\",\"messages\":[{\"role\":\"user\",\"content\":\"ping\"}]}"
+curl -X POST http://127.0.0.1:8000/v1/chat/completions -H "Content-Type: application/json" -d "{\"model\":\"mock-model\",\"messages\":[{\"role\":\"user\",\"content\":\"ping\"}]}"
 ```
 
 ## Running Tests
@@ -46,7 +46,7 @@ Run full scenario matrix or A/B experiments:
 ```
 
 ## Configuration & Profiles
-- `.env.example`: Safe mock defaults, tracked in git.
+- `.env.example`: Safe mock defaults (`PROVIDER_BASE_URL=http://127.0.0.1:9000`), tracked in git.
 - `.env.real`: Upstream API credentials and real provider settings, git-ignored.
 - Environment variables: `PROVIDER_NAME`, `PROVIDER_BASE_URL`, `PROVIDER_API_KEY`, `PROVIDER_MODEL`, `CONCURRENCY_LIMIT`, `QUEUE_SIZE`, `REQUEST_TIMEOUT`.
 - Profiles:
