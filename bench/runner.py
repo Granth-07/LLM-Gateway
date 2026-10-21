@@ -466,7 +466,11 @@ async def run_trial(
                 try:
                     if not root_p.is_running():
                         return []
-                    tree = [root_p] + root_p.children(recursive=True)
+                    if role == "runner":
+                        # Sample runner's OWN PID only (exclude child subprocesses: gateway, mock, and their interpreters)
+                        tree = [root_p]
+                    else:
+                        tree = [root_p] + root_p.children(recursive=True)
                 except Exception:
                     tree = [root_p] if root_p.is_running() else []
 
