@@ -125,7 +125,7 @@ class SubprocessManager:
             "--max-capacity",
             str(self.cfg.mock_max_capacity),
             "--capacity-mode",
-            str(self.cfg.mock_capacity_mode),
+            self.cfg.mock_capacity_mode,
             "--error-rate-429",
             str(self.cfg.mock_error_rate_429),
             "--error-rate-500",
@@ -246,7 +246,7 @@ class SubprocessManager:
                 except subprocess.TimeoutExpired:
                     p.kill()
                     p.wait(timeout=1.0)
-            if p is not None and getattr(p, "stderr", None) is not None:
+            if p is not None and p.stderr is not None:
                 try:
                     p.stderr.close()
                 except Exception:
