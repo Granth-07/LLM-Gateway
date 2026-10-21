@@ -8,9 +8,11 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import logging
 import os
 import subprocess
 import sys
+import threading
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -423,80 +425,164 @@ async def run_trial(
                 except Exception:
                     pass
 
-        # Start psutil sampler (1 Hz) for system, gateway, mock, and runner
+        # Start psutil sampler (1 Hz) for system, gateway, mock, and runner process trees
+        # CPU% normalization: percent of one core (e.g. 100% = 1 full logical core utilized).
         sample_data: list[dict[str, Any]] = []
-        sampler_stop = asyncio.Event()
+        sampler_stop = threading.Event()
+        bench_logger = logging.getLogger("bench.runner")
 
-        async def _psutil_sampler_task() -> None:
+        def _psutil_sampler_worker() -> None:
             try:
                 import psutil
             except ImportError:
                 return
 
-            procs: dict[str, Optional[psutil.Process]] = {}
+            root_procs: dict[str, Optional[psutil.Process]] = {}
             try:
-                procs["runner"] = psutil.Process(os.getpid())
+                root_procs["runner"] = psutil.Process(os.getpid())
             except Exception:
                 pass
             if subproc_mgr and subproc_mgr.gateway_proc and subproc_mgr.gateway_proc.pid:
                 try:
-                    procs["gateway"] = psutil.Process(subproc_mgr.gateway_proc.pid)
+                    root_procs["gateway"] = psutil.Process(subproc_mgr.gateway_proc.pid)
                 except Exception:
                     pass
             if subproc_mgr and subproc_mgr.mock_proc and subproc_mgr.mock_proc.pid:
                 try:
-                    procs["mock"] = psutil.Process(subproc_mgr.mock_proc.pid)
+                    root_procs["mock"] = psutil.Process(subproc_mgr.mock_proc.pid)
                 except Exception:
                     pass
 
-            # Prime initial cpu counters
+            # Track Process objects by PID across samples so cpu_percent(interval=None) maintains state
+            tracked_procs: dict[str, dict[int, psutil.Process]] = {
+                "runner": {},
+                "gateway": {},
+                "mock": {},
+            }
+
+            def _get_tree(role: str, root_p: Optional[psutil.Process]) -> list[psutil.Process]:
+                if root_p is None:
+                    return []
+                try:
+                    if not root_p.is_running():
+                        return []
+                    tree = [root_p] + root_p.children(recursive=True)
+                except Exception:
+                    tree = [root_p] if root_p.is_running() else []
+
+                alive: list[psutil.Process] = []
+                current_pids = set()
+                for p in tree:
+                    try:
+                        if p.is_running():
+                            current_pids.add(p.pid)
+                            if p.pid not in tracked_procs[role]:
+                                p.cpu_percent(interval=None)  # prime CPU counter
+                                tracked_procs[role][p.pid] = p
+                            alive.append(tracked_procs[role][p.pid])
+                    except Exception:
+                        pass
+                for pid in list(tracked_procs[role].keys()):
+                    if pid not in current_pids:
+                        tracked_procs[role].pop(pid, None)
+                return alive
+
+            # Prime initial counters for process trees
+            for role, rp in root_procs.items():
+                _get_tree(role, rp)
+
+            # Prime system CPU
             try:
                 psutil.cpu_percent(interval=None)
-                for p in procs.values():
-                    if p is not None:
-                        try:
-                            p.cpu_percent(interval=None)
-                        except Exception:
-                            pass
             except Exception:
                 pass
 
-            while not sampler_stop.is_set():
-                try:
-                    await asyncio.wait_for(sampler_stop.wait(), timeout=1.0)
-                    break
-                except asyncio.TimeoutError:
-                    pass
+            benchmark_pids = set()
+            for r_procs in tracked_procs.values():
+                benchmark_pids.update(r_procs.keys())
 
+            # Prime other system processes
+            other_tracked: dict[int, psutil.Process] = {}
+            try:
+                for p in psutil.process_iter(["name"]):
+                    try:
+                        if p.pid != 0 and p.pid not in benchmark_pids:
+                            p.cpu_percent(interval=None)
+                            other_tracked[p.pid] = p
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+            while not sampler_stop.wait(timeout=1.0):
                 snap: dict[str, Any] = {}
                 try:
                     snap["system_cpu"] = psutil.cpu_percent(interval=None)
-                    for role, p in procs.items():
-                        if p is not None and p.is_running():
-                            try:
-                                mem = p.memory_info()
-                                handles = p.num_handles() if hasattr(p, "num_handles") else 0
-                                snap[role] = {
-                                    "cpu_percent": p.cpu_percent(interval=None),
-                                    "rss_mb": mem.rss / (1024 * 1024),
-                                    "threads": p.num_threads(),
-                                    "handles": handles,
-                                }
-                            except Exception:
-                                pass
+                    all_bench_pids = set()
+
+                    for role, rp in root_procs.items():
+                        alive_procs = _get_tree(role, rp)
+                        all_bench_pids.update(p.pid for p in alive_procs)
+                        if alive_procs:
+                            tree_cpu = 0.0
+                            tree_rss_mb = 0.0
+                            tree_threads = 0
+                            tree_handles = 0
+                            for p in alive_procs:
+                                try:
+                                    # CPU% is normalized to percent of one core (100% = 1 core)
+                                    tree_cpu += p.cpu_percent(interval=None)
+                                    tree_rss_mb += p.memory_info().rss / (1024 * 1024)
+                                    tree_threads += p.num_threads()
+                                    if hasattr(p, "num_handles"):
+                                        tree_handles += p.num_handles()
+                                except Exception:
+                                    pass
+                            snap[role] = {
+                                "cpu_percent": round(tree_cpu, 2),
+                                "rss_mb": round(tree_rss_mb, 2),
+                                "threads": tree_threads,
+                                "handles": tree_handles,
+                            }
+
+                    # Top-3 OTHER system processes by CPU (excluding benchmark process tree and idle process)
+                    other_candidates: list[tuple[float, str]] = []
+                    for pid, p in list(other_tracked.items()):
+                        if pid in all_bench_pids or pid == 0:
+                            continue
+                        try:
+                            if p.is_running():
+                                c = p.cpu_percent(interval=None)
+                                name = p.name()
+                                if name and name != "System Idle Process":
+                                    other_candidates.append((c, name))
+                            else:
+                                other_tracked.pop(pid, None)
+                        except Exception:
+                            other_tracked.pop(pid, None)
+
+                    other_candidates.sort(key=lambda x: x[0], reverse=True)
+                    top_3_other = [name for _, name in other_candidates[:3]]
+                    snap["top_other_processes"] = top_3_other
+
+                    bench_logger.info("1 Hz sample: top-3 other system processes by CPU: %s", top_3_other)
+                    print(f"[psutil sampler 1Hz] top-3 other processes by CPU: {top_3_other}")
+
                 except Exception:
                     pass
+
                 if snap:
                     sample_data.append(snap)
 
-        sampler_handle = asyncio.create_task(_psutil_sampler_task())
+        sampler_thread = threading.Thread(target=_psutil_sampler_worker, daemon=True)
+        sampler_thread.start()
 
         # Run closed-loop workload
         records, start_time, end_time, retry_after_429, last_err_body = await run_closed_loop_workload(gateway_url, workload_cfg)
 
         # Stop sampler
         sampler_stop.set()
-        await sampler_handle
+        await asyncio.to_thread(sampler_thread.join, 2.0)
 
         # Aggregate resource stats
         resource_stats: dict[str, Any] = {}
