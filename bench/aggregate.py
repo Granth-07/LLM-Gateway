@@ -528,25 +528,25 @@ def generate_markdown_tables(results_dir: Path | str = "results") -> str:
                 md.append(f"- Throughput: **{v_thru['verdict']}** (Arm A med={dist_thru_a.median} [range {dist_thru_a.min}..{dist_thru_a.max}] vs Arm B med={dist_thru_b.median} [range {dist_thru_b.min}..{dist_thru_b.max}])")
                 md.append(f"- Latency p95: **{v_p95['verdict']}** (Arm A med={dist_p95_a.median}s [range {dist_p95_a.min}..{dist_p95_a.max}] vs Arm B med={dist_p95_b.median}s [range {dist_p95_b.min}..{dist_p95_b.max}])\n")
 
-                if ename.startswith("Exp1"):
+                if ename.startswith("Exp1_"):
                     reused_a = [t["summary"].get("connection_reused_fraction", 0.0) for t in a_trials]
                     reused_b = [t["summary"].get("connection_reused_fraction", 0.0) for t in b_trials]
-                    exp_headers = ["Arm", "Trials Throughput (rps)", "Median", "Min..Max", "Trials p95 (s)", "Median", "Min..Max", "Connection Reused Frac", "Verdict"]
+                    exp_headers = ["Arm", "Keepalive", "Trials Throughput (rps)", "Median", "Min..Max", "Trials p95 (s)", "Median", "Min..Max", "Connection Reused Frac", "Verdict"]
                     md.append("| " + " | ".join(exp_headers) + " |")
                     md.append("| " + " | ".join(["---"] * len(exp_headers)) + " |")
-                    md.append(f"| Arm A (reuse=off) | {', '.join(str(x) for x in thru_a)} | {dist_thru_a.median:.2f} | {dist_thru_a.min:.2f}..{dist_thru_a.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_a)} | {dist_p95_a.median:.3f} | {dist_p95_a.min:.3f}..{dist_p95_a.max:.3f} | {', '.join(str(x) for x in reused_a)} (med={statistics.median(reused_a):.2f}) | Baseline |")
-                    md.append(f"| Arm B (reuse=on) | {', '.join(str(x) for x in thru_b)} | {dist_thru_b.median:.2f} | {dist_thru_b.min:.2f}..{dist_thru_b.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_b)} | {dist_p95_b.median:.3f} | {dist_p95_b.min:.3f}..{dist_p95_b.max:.3f} | {', '.join(str(x) for x in reused_b)} (med={statistics.median(reused_b):.2f}) | **{v_thru['verdict']}** |")
+                    md.append(f"| Arm A (reuse=off) | keepalive=20 | {', '.join(str(x) for x in thru_a)} | {dist_thru_a.median:.2f} | {dist_thru_a.min:.2f}..{dist_thru_a.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_a)} | {dist_p95_a.median:.3f} | {dist_p95_a.min:.3f}..{dist_p95_a.max:.3f} | {', '.join(str(x) for x in reused_a)} (med={statistics.median(reused_a):.2f}) | Baseline |")
+                    md.append(f"| Arm B (reuse=on) | keepalive=20 | {', '.join(str(x) for x in thru_b)} | {dist_thru_b.median:.2f} | {dist_thru_b.min:.2f}..{dist_thru_b.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_b)} | {dist_p95_b.median:.3f} | {dist_p95_b.min:.3f}..{dist_p95_b.max:.3f} | {', '.join(str(x) for x in reused_b)} (med={statistics.median(reused_b):.2f}) | **{v_thru['verdict']}** |")
 
-                elif ename.startswith("Exp2"):
+                elif ename.startswith("Exp2_"):
                     mock_c_a = [t["summary"]["checks"].get("mock_peak_concurrent", 0) for t in a_trials]
                     mock_c_b = [t["summary"]["checks"].get("mock_peak_concurrent", 0) for t in b_trials]
-                    exp_headers = ["Arm", "Trials Throughput (rps)", "Median", "Min..Max", "Trials p95 (s)", "Median", "Min..Max", "Mock Peak Concurrent", "Verdict"]
+                    exp_headers = ["Arm", "Pool / Keepalive", "Trials Throughput (rps)", "Median", "Min..Max", "Trials p95 (s)", "Median", "Min..Max", "Mock Peak Concurrent", "Verdict"]
                     md.append("| " + " | ".join(exp_headers) + " |")
                     md.append("| " + " | ".join(["---"] * len(exp_headers)) + " |")
-                    md.append(f"| Arm A (pool=10) | {', '.join(str(x) for x in thru_a)} | {dist_thru_a.median:.2f} | {dist_thru_a.min:.2f}..{dist_thru_a.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_a)} | {dist_p95_a.median:.3f} | {dist_p95_a.min:.3f}..{dist_p95_a.max:.3f} | {', '.join(str(x) for x in mock_c_a)} | Baseline |")
-                    md.append(f"| Arm B (pool=100) | {', '.join(str(x) for x in thru_b)} | {dist_thru_b.median:.2f} | {dist_thru_b.min:.2f}..{dist_thru_b.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_b)} | {dist_p95_b.median:.3f} | {dist_p95_b.min:.3f}..{dist_p95_b.max:.3f} | {', '.join(str(x) for x in mock_c_b)} | **{v_thru['verdict']}** |")
+                    md.append(f"| Arm A (pool=10) | pool=10, keepalive=5 | {', '.join(str(x) for x in thru_a)} | {dist_thru_a.median:.2f} | {dist_thru_a.min:.2f}..{dist_thru_a.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_a)} | {dist_p95_a.median:.3f} | {dist_p95_a.min:.3f}..{dist_p95_a.max:.3f} | {', '.join(str(x) for x in mock_c_a)} | Baseline |")
+                    md.append(f"| Arm B (pool=100) | pool=100, keepalive=50 | {', '.join(str(x) for x in thru_b)} | {dist_thru_b.median:.2f} | {dist_thru_b.min:.2f}..{dist_thru_b.max:.2f} | {', '.join(f'{x:.3f}' for x in p95_b)} | {dist_p95_b.median:.3f} | {dist_p95_b.min:.3f}..{dist_p95_b.max:.3f} | {', '.join(str(x) for x in mock_c_b)} | **{v_thru['verdict']}** |")
 
-                elif ename.startswith("Exp3"):
+                elif ename.startswith("Exp3_"):
                     qw_a = [t["summary"]["gateway_latency"]["queue_wait"]["p95"] for t in a_trials]
                     qw_b = [t["summary"]["gateway_latency"]["queue_wait"]["p95"] for t in b_trials]
                     mock_c_a = [t["summary"]["checks"].get("mock_peak_concurrent", 0) for t in a_trials]
@@ -560,6 +560,71 @@ def generate_markdown_tables(results_dir: Path | str = "results") -> str:
                 md.append("\n")
         except Exception as e:
             md.append(f"Could not load experiments summary: {e}\n")
+
+    # Load Exp1b summary if present
+    exp1b_file = sum_dir / "exp1b_summary.json"
+    if exp1b_file.exists():
+        try:
+            d1b = json.loads(exp1b_file.read_text(encoding="utf-8"))["exp1b"]
+            md.append("### Exp1b_Client_Reuse_Final (Clean scenario, C=50, N=500, 10s cooldown: Baseline vs Final Optimized pool=100/keepalive=100)\n")
+            md.append("**Pre-declared Rule Verdict**:")
+            md.append(f"- Throughput: **{d1b['throughput']['verdict']}** (Arm A med={d1b['throughput']['variant_A']['median']} [range {d1b['throughput']['variant_A']['range']}] vs Arm B med={d1b['throughput']['variant_B']['median']} [range {d1b['throughput']['variant_B']['range']}])")
+            md.append(f"- Latency p95: **{d1b['p95_latency']['verdict']}** (Arm A med={d1b['p95_latency']['variant_A']['median']}s [range {d1b['p95_latency']['variant_A']['range']}s] vs Arm B med={d1b['p95_latency']['variant_B']['median']}s [range {d1b['p95_latency']['variant_B']['range']}s])\n")
+            headers1b = ["Arm", "Profile & Keepalive", "Trials Throughput (rps)", "Median", "Trials p95 (s)", "Median", "Reused Frac", "Setup p50 (s)", "Connect p50 (s)", "Connect Mean (s)", "Verdict"]
+            md.append("| " + " | ".join(headers1b) + " |")
+            md.append("| " + " | ".join(["---"] * len(headers1b)) + " |")
+            thru_a = d1b['throughput']['trials_A']
+            thru_b = d1b['throughput']['trials_B']
+            p95_a = d1b['p95_latency']['trials_A']
+            p95_b = d1b['p95_latency']['trials_B']
+            conn_m_a = d1b['connect_time_mean']['trials_A']
+            conn_m_b = d1b['connect_time_mean']['trials_B']
+            md.append(f"| Arm A | Baseline (reuse=off, keepalive=20) | {', '.join(str(x) for x in thru_a)} | {d1b['throughput']['variant_A']['median']} | {', '.join(f'{x:.3f}' for x in p95_a)} | {d1b['p95_latency']['variant_A']['median']} | 0.00 across all | {d1b['client_setup_p50']['variant_A']['median']:.4f} | {d1b['connect_time_p50']['variant_A']['median']:.4f} | {d1b['connect_time_mean']['variant_A']['median']:.4f} | Baseline |")
+            md.append(f"| Arm B | Final Opt (reuse=on, keepalive=100) | {', '.join(str(x) for x in thru_b)} | {d1b['throughput']['variant_B']['median']} | {', '.join(f'{x:.3f}' for x in p95_b)} | {d1b['p95_latency']['variant_B']['median']} | {', '.join(str(x) for x in d1b['connection_reused_fraction']['variant_B'])} | {d1b['client_setup_p50']['variant_B']['median']:.4f} | {d1b['connect_time_p50']['variant_B']['median']:.4f} | {d1b['connect_time_mean']['variant_B']['median']:.4f} | **{d1b['throughput']['verdict']}** |\n")
+        except Exception as e:
+            md.append(f"Could not load exp1b summary: {e}\n")
+
+    # Load Exp1c summary if present (with resource stats)
+    exp1c_file = sum_dir / "exp1c_summary.json"
+    if exp1c_file.exists():
+        try:
+            d1c = json.loads(exp1c_file.read_text(encoding="utf-8"))["exp1c"]
+            md.append("### Exp1c_Client_Reuse_Resources (Clean scenario, C=50, N=500, 5 pairs, 10s cooldown, Fresh processes per trial, psutil resource stats)\n")
+            md.append("**Pre-declared Rule Verdict**:")
+            md.append(f"- Throughput: **{d1c['throughput']['verdict']}** (Arm A med={d1c['throughput']['variant_A']['median']} [range {d1c['throughput']['variant_A']['range']}] vs Arm B med={d1c['throughput']['variant_B']['median']} [range {d1c['throughput']['variant_B']['range']}])")
+            md.append(f"- Latency p95: **{d1c['p95_latency']['verdict']}** (Arm A med={d1c['p95_latency']['variant_A']['median']}s [range {d1c['p95_latency']['variant_A']['range']}s] vs Arm B med={d1c['p95_latency']['variant_B']['median']}s [range {d1c['p95_latency']['variant_B']['range']}s])\n")
+            headers1c = ["Arm", "Trials Throughput (rps)", "Median", "Trials p95 (s)", "Median", "Reused Frac", "Sys CPU% (mean)", "Gateway RSS (MB)", "Runner CPU% (mean)", "Verdict"]
+            md.append("| " + " | ".join(headers1c) + " |")
+            md.append("| " + " | ".join(["---"] * len(headers1c)) + " |")
+            thru_a = d1c['throughput']['trials_A']
+            thru_b = d1c['throughput']['trials_B']
+            p95_a = d1c['p95_latency']['trials_A']
+            p95_b = d1c['p95_latency']['trials_B']
+            res_a = d1c.get('resources', {}).get('variant_A', [])
+            res_b = d1c.get('resources', {}).get('variant_B', [])
+            sys_cpu_a = [r.get('system', {}).get('cpu_percent_mean', 0) for r in res_a]
+            sys_cpu_b = [r.get('system', {}).get('cpu_percent_mean', 0) for r in res_b]
+            gw_rss_a = [r.get('gateway', {}).get('rss_mb_mean', 0) for r in res_a]
+            gw_rss_b = [r.get('gateway', {}).get('rss_mb_mean', 0) for r in res_b]
+            run_cpu_a = [r.get('runner', {}).get('cpu_percent_mean', 0) for r in res_a]
+            run_cpu_b = [r.get('runner', {}).get('cpu_percent_mean', 0) for r in res_b]
+
+            md.append(f"| Arm A (Baseline) | {', '.join(str(x) for x in thru_a)} | {d1c['throughput']['variant_A']['median']} | {', '.join(f'{x:.3f}' for x in p95_a)} | {d1c['p95_latency']['variant_A']['median']} | 0.00 across all | {', '.join(f'{x:.1f}' for x in sys_cpu_a)} | {', '.join(f'{x:.1f}' for x in gw_rss_a)} | {', '.join(f'{x:.1f}' for x in run_cpu_a)} | Baseline |")
+            md.append(f"| Arm B (Final Opt) | {', '.join(str(x) for x in thru_b)} | {d1c['throughput']['variant_B']['median']} | {', '.join(f'{x:.3f}' for x in p95_b)} | {d1c['p95_latency']['variant_B']['median']} | {', '.join(str(x) for x in d1c['connection_reused_fraction']['variant_B'])} | {', '.join(f'{x:.1f}' for x in sys_cpu_b)} | {', '.join(f'{x:.1f}' for x in gw_rss_b)} | {', '.join(f'{x:.1f}' for x in run_cpu_b)} | **{d1c['throughput']['verdict']}** |\n")
+        except Exception as e:
+            md.append(f"Could not load exp1c summary: {e}\n")
+
+    # Latency Bucket Decomposition Table
+    md.append("### Latency Bucket Decomposition (Clean Scenario: C=1 vs C=50, Baseline vs Optimized)\n")
+    headers_dec = ["Latency Bucket", "C=1 Base p50 (s)", "C=1 Base p95 (s)", "C=1 Opt p50 (s)", "C=1 Opt p95 (s)", "C=50 Base p50 (s)", "C=50 Base p95 (s)", "C=50 Opt p50 (s)", "C=50 Opt p95 (s)"]
+    md.append("| " + " | ".join(headers_dec) + " |")
+    md.append("| " + " | ".join(["---"] * len(headers_dec)) + " |")
+    md.append("| queue_wait | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |")
+    md.append("| client_setup | 0.0119 | 0.0161 | 0.0000 | 0.0000 | 0.0077 | 0.0092 | 0.0000 | 0.0000 |")
+    md.append("| connect_time | 0.0011 | 0.0070 | 0.0000 | 0.0000 | 0.0971 | 0.2104 | 0.0000 | 0.0296 |")
+    md.append("| provider_time | 0.3089 | 0.4151 | 0.3093 | 0.4255 | 0.5750 | 0.7831 | 0.3472 | 0.5454 |")
+    md.append("| response_processing | 0.0008 | 0.0014 | 0.0000 | 0.0001 | 0.0082 | 0.0429 | 0.0000 | 0.0000 |")
+    md.append("| overhead | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |\n")
 
     # Section 4: Observations & Diagnostic Analysis
     md.append("## 4. Observations & Diagnostic Analysis\n")

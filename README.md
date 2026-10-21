@@ -2,7 +2,7 @@
 
 High-concurrency LLM gateway with strict admission control, bounded queues, and reproducible benchmarks.
 
-**System Environment**: Windows-11-10.0.26300-SP0, Intel64 Family 6 Model 151 Stepping 2, GenuineIntel, 12 logical cores [Measured].
+**System Environment**: Windows-11-10.0.26300, Intel64 Family 6 Model 151, 12 logical CPUs [Measured].
 
 ## Installation
 ```powershell

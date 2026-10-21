@@ -1,0 +1,668 @@
+{
+  "timestamp": 1792542153.8702333,
+  "total_runtime_seconds": 192.35,
+  "cooldown_seconds": 10.0,
+  "exp1c": {
+    "experiment": "Exp1c_Client_Reuse_Resources",
+    "throughput": {
+      "variant_A": {
+        "median": 61.23,
+        "min": 21.11,
+        "max": 64.59,
+        "range": 43.48,
+        "values": [
+          60.34,
+          21.11,
+          64.59,
+          61.23,
+          63.51
+        ]
+      },
+      "variant_B": {
+        "median": 110.81,
+        "min": 27.94,
+        "max": 115.49,
+        "range": 87.55,
+        "values": [
+          110.81,
+          108.15,
+          114.23,
+          27.94,
+          115.49
+        ]
+      },
+      "trials_A": [
+        60.34,
+        21.11,
+        64.59,
+        61.23,
+        63.51
+      ],
+      "trials_B": [
+        110.81,
+        108.15,
+        114.23,
+        27.94,
+        115.49
+      ],
+      "verdict": "inconclusive",
+      "details": {
+        "verdict": "inconclusive",
+        "baseline_median": 61.23,
+        "candidate_median": 110.81,
+        "diff": 49.58,
+        "baseline_min": 21.11,
+        "baseline_max": 64.59,
+        "candidate_min": 27.94,
+        "candidate_max": 115.49,
+        "rule": "every_trial"
+      }
+    },
+    "p95_latency": {
+      "variant_A": {
+        "median": 1.251685,
+        "min": 1.187178,
+        "max": 2.831862,
+        "range": 1.644684,
+        "values": [
+          1.285022,
+          2.831862,
+          1.209081,
+          1.251685,
+          1.187178
+        ]
+      },
+      "variant_B": {
+        "median": 0.679435,
+        "min": 0.646227,
+        "max": 5.365653,
+        "range": 4.719426,
+        "values": [
+          0.679435,
+          0.683141,
+          0.663842,
+          5.365653,
+          0.646227
+        ]
+      },
+      "trials_A": [
+        1.285022,
+        2.831862,
+        1.209081,
+        1.251685,
+        1.187178
+      ],
+      "trials_B": [
+        0.679435,
+        0.683141,
+        0.663842,
+        5.365653,
+        0.646227
+      ],
+      "verdict": "inconclusive",
+      "details": {
+        "verdict": "inconclusive",
+        "baseline_median": 1.251685,
+        "candidate_median": 0.679435,
+        "diff": -0.57225,
+        "baseline_min": 1.187178,
+        "baseline_max": 2.831862,
+        "candidate_min": 0.646227,
+        "candidate_max": 5.365653,
+        "rule": "every_trial"
+      }
+    },
+    "client_setup_p50": {
+      "variant_A": {
+        "median": 0.007528,
+        "min": 0.007389,
+        "max": 0.022946,
+        "range": 0.015557,
+        "values": [
+          0.007734,
+          0.022946,
+          0.007389,
+          0.007528,
+          0.007407
+        ]
+      },
+      "variant_B": {
+        "median": 2e-06,
+        "min": 2e-06,
+        "max": 7e-06,
+        "range": 5e-06,
+        "values": [
+          3e-06,
+          2e-06,
+          2e-06,
+          7e-06,
+          2e-06
+        ]
+      },
+      "trials_A": [
+        0.007734,
+        0.022946,
+        0.007389,
+        0.007528,
+        0.007407
+      ],
+      "trials_B": [
+        3e-06,
+        2e-06,
+        2e-06,
+        7e-06,
+        2e-06
+      ]
+    },
+    "connect_time_p50": {
+      "variant_A": {
+        "median": 0.092171,
+        "min": 0.082117,
+        "max": 0.29937,
+        "range": 0.217253,
+        "values": [
+          0.092171,
+          0.29937,
+          0.082117,
+          0.093113,
+          0.082573
+        ]
+      },
+      "variant_B": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "trials_A": [
+        0.092171,
+        0.29937,
+        0.082117,
+        0.093113,
+        0.082573
+      ],
+      "trials_B": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "connect_time_mean": {
+      "variant_A": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "variant_B": {
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "range": 0.0,
+        "values": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "trials_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "trials_B": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "mock_peak_concurrent": {
+      "variant_A": {
+        "median": 50.0,
+        "min": 50.0,
+        "max": 50.0,
+        "range": 0.0,
+        "values": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "variant_B": {
+        "median": 50.0,
+        "min": 50.0,
+        "max": 50.0,
+        "range": 0.0,
+        "values": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      }
+    },
+    "connection_reused_fraction": {
+      "variant_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variant_B": [
+        0.92,
+        0.92,
+        0.92,
+        0.83,
+        0.92
+      ]
+    },
+    "gateway_queue_wait_p95": {
+      "variant_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variant_B": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "resources": {
+      "variant_A": [
+        {
+          "system": {
+            "cpu_percent_mean": 23.23,
+            "cpu_percent_max": 25.8
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.13,
+            "rss_mb_max": 5.13,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.13,
+            "rss_mb_max": 5.13,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 20.98,
+            "cpu_percent_max": 50.9,
+            "rss_mb_mean": 85.39,
+            "rss_mb_max": 87.53,
+            "threads_mean": 5.0,
+            "threads_max": 5,
+            "handles_mean": 218.2,
+            "handles_max": 222
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 22.29,
+            "cpu_percent_max": 29.5
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.15,
+            "rss_mb_max": 5.15,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 22.81,
+            "cpu_percent_max": 95.1,
+            "rss_mb_mean": 125.1,
+            "rss_mb_max": 125.4,
+            "threads_mean": 7.0,
+            "threads_max": 7,
+            "handles_mean": 222.3,
+            "handles_max": 223
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 20.03,
+            "cpu_percent_max": 21.8
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 23.54,
+            "cpu_percent_max": 47.8,
+            "rss_mb_mean": 199.15,
+            "rss_mb_max": 199.78,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 223.0,
+            "handles_max": 223
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 23.65,
+            "cpu_percent_max": 30.4
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 21.4,
+            "cpu_percent_max": 49.7,
+            "rss_mb_mean": 274.06,
+            "rss_mb_max": 274.68,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 217.5,
+            "handles_max": 223
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 17.9,
+            "cpu_percent_max": 24.0
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 20.23,
+            "cpu_percent_max": 47.9,
+            "rss_mb_mean": 138.04,
+            "rss_mb_max": 138.34,
+            "threads_mean": 2.0,
+            "threads_max": 2,
+            "handles_mean": 221.0,
+            "handles_max": 221
+          }
+        }
+      ],
+      "variant_B": [
+        {
+          "system": {
+            "cpu_percent_mean": 21.62,
+            "cpu_percent_max": 26.0
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 41.75,
+            "cpu_percent_max": 62.2,
+            "rss_mb_mean": 87.35,
+            "rss_mb_max": 87.77,
+            "threads_mean": 5.0,
+            "threads_max": 5,
+            "handles_mean": 222.0,
+            "handles_max": 222
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 22.05,
+            "cpu_percent_max": 29.9
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 35.65,
+            "cpu_percent_max": 56.2,
+            "rss_mb_mean": 161.61,
+            "rss_mb_max": 162.21,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 223.0,
+            "handles_max": 223
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 17.9,
+            "cpu_percent_max": 20.2
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 37.77,
+            "cpu_percent_max": 57.7,
+            "rss_mb_mean": 236.96,
+            "rss_mb_max": 237.52,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 220.2,
+            "handles_max": 223
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 17.58,
+            "cpu_percent_max": 30.6
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.13,
+            "rss_mb_max": 5.13,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 24.93,
+            "cpu_percent_max": 85.7,
+            "rss_mb_mean": 299.74,
+            "rss_mb_max": 311.92,
+            "threads_mean": 2.0,
+            "threads_max": 2,
+            "handles_mean": 218.1,
+            "handles_max": 221
+          }
+        },
+        {
+          "system": {
+            "cpu_percent_mean": 10.8,
+            "cpu_percent_max": 12.5
+          },
+          "gateway": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.12,
+            "rss_mb_max": 5.12,
+            "threads_mean": 3.0,
+            "threads_max": 3,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "mock": {
+            "cpu_percent_mean": 0.0,
+            "cpu_percent_max": 0.0,
+            "rss_mb_mean": 5.14,
+            "rss_mb_max": 5.14,
+            "threads_mean": 4.0,
+            "threads_max": 4,
+            "handles_mean": 60.0,
+            "handles_max": 60
+          },
+          "runner": {
+            "cpu_percent_mean": 37.12,
+            "cpu_percent_max": 57.8,
+            "rss_mb_mean": 167.61,
+            "rss_mb_max": 167.81,
+            "threads_mean": 2.0,
+            "threads_max": 2,
+            "handles_mean": 218.0,
+            "handles_max": 221
+          }
+        }
+      ]
+    }
+  }
+}

@@ -37,7 +37,7 @@
 
 ## 3. Experiments (7 trials per arm, A/B interleaved)
 
-### Exp1_Client_Reuse (Original: keepalive=20 on both arms)
+### Exp1_Client_Reuse
 
 **Pre-declared Rule Verdict**:
 - Throughput: **improved** (Arm A med=49.63 [range 47.47..50.56] vs Arm B med=89.33 [range 84.34..92.36])
@@ -45,23 +45,11 @@
 
 | Arm | Keepalive | Trials Throughput (rps) | Median | Min..Max | Trials p95 (s) | Median | Min..Max | Connection Reused Frac | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Arm A (reuse=off) | keepalive=20 | 50.15, 49.91, 47.6, 50.56, 47.47, 49.37, 49.63 | 49.63 | 47.47..50.56 | 1.452, 1.567, 1.491, 1.443, 1.525, 1.535, 1.435 | 1.491 | 1.435..1.567 | 0.00 across all trials | Baseline |
-| Arm B (reuse=on) | keepalive=20 | 89.33, 92.36, 85.55, 84.78, 90.47, 92.01, 84.34 | 89.33 | 84.34..92.36 | 0.827, 0.841, 0.863, 0.813, 0.816, 0.830, 1.013 | 0.830 | 0.813..1.013 | 0.00 across all trials (churn) | **improved** |
+| Arm A (reuse=off) | keepalive=20 | 50.15, 49.91, 47.6, 50.56, 47.47, 49.37, 49.63 | 49.63 | 47.47..50.56 | 1.452, 1.567, 1.491, 1.443, 1.525, 1.535, 1.435 | 1.491 | 1.435..1.567 | 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 (med=0.00) | Baseline |
+| Arm B (reuse=on) | keepalive=20 | 89.33, 92.36, 85.55, 84.78, 90.47, 92.01, 84.34 | 89.33 | 84.34..92.36 | 0.827, 0.841, 0.863, 0.813, 0.816, 0.830, 1.013 | 0.830 | 0.813..1.013 | 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 (med=0.00) | **improved** |
 
 
-### Exp1b_Client_Reuse_Final (Clean scenario, C=50, N=500, 10s cooldown: Baseline vs Final Optimized pool=100/keepalive=100)
-
-**Pre-declared Rule Verdict**:
-- Throughput: **inconclusive** (Arm A med=57.43 [range 20.13..62.73] vs Arm B med=108.28 [range 21.21..116.32]; trials 5-7 experienced socket/transport churn in both arms)
-- Latency p95: **inconclusive** (Arm A med=1.323s [range 1.194..3.028] vs Arm B med=0.696s [range 0.639..5.931])
-
-| Arm | Profile & Keepalive | Trials Throughput (rps) | Median | Trials p95 (s) | Median | Reused Frac | Setup p50 (s) | Connect p50 (s) | Connect Mean (s) | Verdict |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Arm A | Baseline (reuse=off, keepalive=20) | 57.22, 57.43, 60.33, 62.73, 61.71, 20.13, 29.61 | 57.43 | 1.368, 1.297, 1.323, 1.194, 1.217, 3.028, 2.679 | 1.323 | 0.00 across all | 0.0080 | 0.1054 | 0.1167 | Baseline |
-| Arm B | Final Opt (reuse=on, keepalive=100) | 116.32, 111.25, 108.28, 114.52, 31.92, 21.21, 32.37 | 108.28 | 0.639, 0.687, 0.696, 0.654, 5.206, 5.931, 4.739 | 0.696 | 0.92, 0.92, 0.92, 0.92, 0.89, 0.90, 0.83 (med=0.92) | 0.0000 | 0.0000 | 0.0035 | **inconclusive** |
-
-
-### Exp2_Pool_Limits (Original: keepalive=5 vs 50)
+### Exp2_Pool_Limits
 
 **Pre-declared Rule Verdict**:
 - Throughput: **improved** (Arm A med=27.08 [range 26.55..27.26] vs Arm B med=81.78 [range 74.68..91.24])
@@ -85,9 +73,31 @@
 | Arm B (release=on) | 48.74, 45.89, 48.37, 49.65, 37.86, 47.18, 47.69 | 47.69 | 37.86..49.65 | 1.878, 1.817, 1.856, 1.696, 1.986, 1.744, 1.810 | 1.817 | 1.696..1.986 | 0.344, 0.389, 0.440, 0.419, 0.483, 0.383, 0.443 (med=0.419) | 25, 25, 25, 25, 25, 25, 25 | **inconclusive** |
 
 
+### Exp1b_Client_Reuse_Final (Clean scenario, C=50, N=500, 10s cooldown: Baseline vs Final Optimized pool=100/keepalive=100)
+
+**Pre-declared Rule Verdict**:
+- Throughput: **inconclusive** (Arm A med=57.43 [range 42.6] vs Arm B med=108.28 [range 95.11])
+- Latency p95: **inconclusive** (Arm A med=1.323279s [range 1.833618s] vs Arm B med=0.695933s [range 5.292056s])
+
+| Arm | Profile & Keepalive | Trials Throughput (rps) | Median | Trials p95 (s) | Median | Reused Frac | Setup p50 (s) | Connect p50 (s) | Connect Mean (s) | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Arm A | Baseline (reuse=off, keepalive=20) | 57.22, 57.43, 60.33, 62.73, 61.71, 20.13, 29.61 | 57.43 | 1.368, 1.297, 1.323, 1.194, 1.217, 3.028, 2.679 | 1.323279 | 0.00 across all | 0.0080 | 0.1054 | 0.1167 | Baseline |
+| Arm B | Final Opt (reuse=on, keepalive=100) | 116.32, 111.25, 108.28, 114.52, 31.92, 21.21, 32.37 | 108.28 | 0.639, 0.687, 0.696, 0.654, 5.206, 5.931, 4.739 | 0.695933 | 0.92, 0.92, 0.92, 0.92, 0.892, 0.9, 0.828 | 0.0000 | 0.0000 | 0.0035 | **inconclusive** |
+
+### Exp1c_Client_Reuse_Resources (Clean scenario, C=50, N=500, 5 pairs, 10s cooldown, Fresh processes per trial, psutil resource stats)
+
+**Pre-declared Rule Verdict**:
+- Throughput: **inconclusive** (Arm A med=61.23 [range 43.48] vs Arm B med=110.81 [range 87.55])
+- Latency p95: **inconclusive** (Arm A med=1.251685s [range 1.644684s] vs Arm B med=0.679435s [range 4.719426s])
+
+| Arm | Trials Throughput (rps) | Median | Trials p95 (s) | Median | Reused Frac | Sys CPU% (mean) | Gateway RSS (MB) | Runner CPU% (mean) | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Arm A (Baseline) | 60.34, 21.11, 64.59, 61.23, 63.51 | 61.23 | 1.285, 2.832, 1.209, 1.252, 1.187 | 1.251685 | 0.00 across all | 23.2, 22.3, 20.0, 23.6, 17.9 | 5.1, 5.2, 5.1, 5.1, 5.1 | 21.0, 22.8, 23.5, 21.4, 20.2 | Baseline |
+| Arm B (Final Opt) | 110.81, 108.15, 114.23, 27.94, 115.49 | 110.81 | 0.679, 0.683, 0.664, 5.366, 0.646 | 0.679435 | 0.92, 0.92, 0.92, 0.83, 0.92 | 21.6, 22.1, 17.9, 17.6, 10.8 | 5.1, 5.1, 5.1, 5.1, 5.1 | 41.8, 35.6, 37.8, 24.9, 37.1 | **inconclusive** |
+
 ### Latency Bucket Decomposition (Clean Scenario: C=1 vs C=50, Baseline vs Optimized)
 
-| Latency Bucket | C=1 Baseline p50 (s) | C=1 Baseline p95 (s) | C=1 Opt p50 (s) | C=1 Opt p95 (s) | C=50 Baseline p50 (s) | C=50 Baseline p95 (s) | C=50 Opt p50 (s) | C=50 Opt p95 (s) |
+| Latency Bucket | C=1 Base p50 (s) | C=1 Base p95 (s) | C=1 Opt p50 (s) | C=1 Opt p95 (s) | C=50 Base p50 (s) | C=50 Base p95 (s) | C=50 Opt p50 (s) | C=50 Opt p95 (s) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | queue_wait | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
 | client_setup | 0.0119 | 0.0161 | 0.0000 | 0.0000 | 0.0077 | 0.0092 | 0.0000 | 0.0000 |
@@ -95,7 +105,6 @@
 | provider_time | 0.3089 | 0.4151 | 0.3093 | 0.4255 | 0.5750 | 0.7831 | 0.3472 | 0.5454 |
 | response_processing | 0.0008 | 0.0014 | 0.0000 | 0.0001 | 0.0082 | 0.0429 | 0.0000 | 0.0000 |
 | overhead | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
-
 
 ## 4. Observations & Diagnostic Analysis
 

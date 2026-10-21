@@ -423,8 +423,107 @@ async def run_trial(
                 except Exception:
                     pass
 
+        # Start psutil sampler (1 Hz) for system, gateway, mock, and runner
+        sample_data: list[dict[str, Any]] = []
+        sampler_stop = asyncio.Event()
+
+        async def _psutil_sampler_task() -> None:
+            try:
+                import psutil
+            except ImportError:
+                return
+
+            procs: dict[str, Optional[psutil.Process]] = {}
+            try:
+                procs["runner"] = psutil.Process(os.getpid())
+            except Exception:
+                pass
+            if subproc_mgr and subproc_mgr.gateway_proc and subproc_mgr.gateway_proc.pid:
+                try:
+                    procs["gateway"] = psutil.Process(subproc_mgr.gateway_proc.pid)
+                except Exception:
+                    pass
+            if subproc_mgr and subproc_mgr.mock_proc and subproc_mgr.mock_proc.pid:
+                try:
+                    procs["mock"] = psutil.Process(subproc_mgr.mock_proc.pid)
+                except Exception:
+                    pass
+
+            # Prime initial cpu counters
+            try:
+                psutil.cpu_percent(interval=None)
+                for p in procs.values():
+                    if p is not None:
+                        try:
+                            p.cpu_percent(interval=None)
+                        except Exception:
+                            pass
+            except Exception:
+                pass
+
+            while not sampler_stop.is_set():
+                try:
+                    await asyncio.wait_for(sampler_stop.wait(), timeout=1.0)
+                    break
+                except asyncio.TimeoutError:
+                    pass
+
+                snap: dict[str, Any] = {}
+                try:
+                    snap["system_cpu"] = psutil.cpu_percent(interval=None)
+                    for role, p in procs.items():
+                        if p is not None and p.is_running():
+                            try:
+                                mem = p.memory_info()
+                                handles = p.num_handles() if hasattr(p, "num_handles") else 0
+                                snap[role] = {
+                                    "cpu_percent": p.cpu_percent(interval=None),
+                                    "rss_mb": mem.rss / (1024 * 1024),
+                                    "threads": p.num_threads(),
+                                    "handles": handles,
+                                }
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+                if snap:
+                    sample_data.append(snap)
+
+        sampler_handle = asyncio.create_task(_psutil_sampler_task())
+
         # Run closed-loop workload
         records, start_time, end_time, retry_after_429, last_err_body = await run_closed_loop_workload(gateway_url, workload_cfg)
+
+        # Stop sampler
+        sampler_stop.set()
+        await sampler_handle
+
+        # Aggregate resource stats
+        resource_stats: dict[str, Any] = {}
+        if sample_data:
+            sys_cpus = [s.get("system_cpu", 0.0) for s in sample_data if "system_cpu" in s]
+            if sys_cpus:
+                resource_stats["system"] = {
+                    "cpu_percent_mean": round(sum(sys_cpus) / len(sys_cpus), 2),
+                    "cpu_percent_max": round(max(sys_cpus), 2),
+                }
+            for role in ("gateway", "mock", "runner"):
+                role_snaps = [s[role] for s in sample_data if role in s]
+                if role_snaps:
+                    cpus = [rs["cpu_percent"] for rs in role_snaps]
+                    rsss = [rs["rss_mb"] for rs in role_snaps]
+                    threads = [rs["threads"] for rs in role_snaps]
+                    handles = [rs["handles"] for rs in role_snaps]
+                    resource_stats[role] = {
+                        "cpu_percent_mean": round(sum(cpus) / len(cpus), 2),
+                        "cpu_percent_max": round(max(cpus), 2),
+                        "rss_mb_mean": round(sum(rsss) / len(rsss), 2),
+                        "rss_mb_max": round(max(rsss), 2),
+                        "threads_mean": round(sum(threads) / len(threads), 1),
+                        "threads_max": max(threads),
+                        "handles_mean": round(sum(handles) / len(handles), 1),
+                        "handles_max": max(handles),
+                    }
 
         # Fetch gateway /metrics and mock /control/stats
         gateway_metrics: dict[str, Any] = {}
@@ -452,6 +551,7 @@ async def run_trial(
             start_time=start_time,
             end_time=end_time,
         )
+        summary["resource_stats"] = resource_stats
 
         # Compare peak in-flight: gateway peak_in_flight vs mock peak_concurrent
         gw_peak_in_flight = gateway_metrics.get("limiter", {}).get("peak_in_flight", 0)

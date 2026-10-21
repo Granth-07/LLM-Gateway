@@ -155,6 +155,9 @@ async def run_ab_experiment(
     verdict_thru = compute_experiment_verdict(dist_thru_a, dist_thru_b, higher_is_better=True, rule="every_trial")
     verdict_p95 = compute_experiment_verdict(dist_p95_a, dist_p95_b, higher_is_better=False, rule="every_trial")
 
+    resources_a = [r["summary"].get("resource_stats", {}) for r in results_a]
+    resources_b = [r["summary"].get("resource_stats", {}) for r in results_b]
+
     exp_result = {
         "experiment": exp_name,
         "throughput": {
@@ -202,6 +205,10 @@ async def run_ab_experiment(
         "gateway_queue_wait_p95": {
             "variant_A": qw_p95_a,
             "variant_B": qw_p95_b,
+        },
+        "resources": {
+            "variant_A": resources_a,
+            "variant_B": resources_b,
         },
     }
 
@@ -369,16 +376,88 @@ async def run_exp1b(
     return final_output
 
 
+async def run_exp1c(
+    *,
+    results_dir: Path = DEFAULT_RESULTS_DIR,
+    mock_port: int = 9000,
+    gateway_port: int = 8000,
+    seed: int = FIXED_SEED,
+    cooldown_seconds: float = 10.0,
+) -> dict[str, Any]:
+    """
+    Exp1c: clean scenario, C=50, N=500, 5 pairs baseline vs final optimized
+    (reuse on, max_connections=100, keepalive=100), A/B interleaved, 10s cooldown,
+    FRESH mock+gateway processes for every trial.
+    """
+    workload = WorkloadConfig(
+        concurrency=50,
+        total_requests=500,
+        warmup_requests=10,
+        seed=seed,
+    )
+    t_start = time.perf_counter()
+
+    cfg1c_a = ServerConfig(
+        mock_port=mock_port, gateway_port=gateway_port, mock_max_capacity=100,
+        concurrency_limit=50, queue_size=200, reuse_http_client=False,
+        pool_max_connections=100, pool_max_keepalive=20, mock_seed=seed,
+    )
+    cfg1c_b = ServerConfig(
+        mock_port=mock_port, gateway_port=gateway_port, mock_max_capacity=100,
+        concurrency_limit=50, queue_size=200, reuse_http_client=True,
+        pool_max_connections=100, pool_max_keepalive=100, mock_seed=seed,
+    )
+    res = await run_ab_experiment(
+        "Exp1c_Client_Reuse_Resources",
+        cfg1c_a, cfg1c_b, workload,
+        trials_per_variant=5,
+        mock_port=mock_port, gateway_port=gateway_port, results_dir=results_dir,
+        cooldown_seconds=cooldown_seconds,
+    )
+
+    total_duration = time.perf_counter() - t_start
+    final_output = {
+        "timestamp": time.time(),
+        "total_runtime_seconds": round(total_duration, 2),
+        "cooldown_seconds": cooldown_seconds,
+        "exp1c": res,
+    }
+
+    summary_file = results_dir / "summary" / "exp1c_summary.json"
+    summary_file.write_text(json.dumps(final_output, indent=2), encoding="utf-8")
+
+    # Generate markdown tables
+    try:
+        from bench.aggregate import generate_markdown_tables
+        generate_markdown_tables(results_dir)
+    except Exception as e:
+        print(f"Warning: could not generate markdown tables: {e}")
+
+    return final_output
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run LLM Gateway Experiments")
     parser.add_argument("--mock-port", type=int, default=9000)
     parser.add_argument("--gateway-port", type=int, default=8000)
     parser.add_argument("--seed", type=int, default=FIXED_SEED)
     parser.add_argument("--exp1b", action="store_true", help="Run Exp1b only (C=50, N=500, 7 trials, 10s cooldown)")
-    parser.add_argument("--cooldown", type=float, default=10.0, help="Cooldown between trials for Exp1b in seconds")
+    parser.add_argument("--exp1c", action="store_true", help="Run Exp1c only (C=50, N=500, 5 trials, 10s cooldown, resources)")
+    parser.add_argument("--cooldown", type=float, default=10.0, help="Cooldown between trials in seconds")
     args = parser.parse_args()
 
-    if args.exp1b:
+    if args.exp1c:
+        print("Launching Exp1c (Clean, C=50, N=500, 5 pairs with psutil resource stats)...")
+        out = asyncio.run(
+            run_exp1c(
+                mock_port=args.mock_port,
+                gateway_port=args.gateway_port,
+                seed=args.seed,
+                cooldown_seconds=args.cooldown,
+            )
+        )
+        print(f"\nExp1c complete in {out['total_runtime_seconds']}s")
+    elif args.exp1b:
         print("Launching Exp1b (Client Reuse Final Profile: baseline vs reuse-on pool=100, C=50, N=500, 7 trials)...")
         out = asyncio.run(
             run_exp1b(
@@ -403,4 +482,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
