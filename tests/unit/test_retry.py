@@ -12,7 +12,7 @@ from gateway import errors as errs
 from gateway.core.retry import RetryBudget, RetryPolicy
 
 
-def test_retryability():
+def test_retryability() -> None:
     policy = RetryPolicy()
 
     # Retryable: timeout, connection, 429, 5xx
@@ -27,7 +27,7 @@ def test_retryability():
     assert policy.is_retryable(ValueError("arbitrary error")) is False
 
 
-def test_backoff_growth_and_jitter_bounds_with_seeded_rng():
+def test_backoff_growth_and_jitter_bounds_with_seeded_rng() -> None:
     # Deterministic seeded rng
     rng = random.Random(42)
     policy = RetryPolicy(
@@ -63,7 +63,7 @@ def test_backoff_growth_and_jitter_bounds_with_seeded_rng():
         assert 0.0 <= d10 <= 4.0
 
 
-def test_retry_after_honored_and_capped():
+def test_retry_after_honored_and_capped() -> None:
     policy = RetryPolicy(
         initial_backoff=0.5,
         retry_after_cap=10.0,
@@ -78,7 +78,7 @@ def test_retry_after_honored_and_capped():
     assert policy.calculate_backoff(1, err_60s) == 10.0
 
 
-def test_budget_exhaustion_stops_retries():
+def test_budget_exhaustion_stops_retries() -> None:
     # Budget: ratio=0.1, floor=2
     # At 0 requests: max allowed retries = int(0 * 0.1) + 2 = 2
     budget = RetryBudget(ratio=0.1, floor=2)
@@ -101,7 +101,7 @@ def test_budget_exhaustion_stops_retries():
     assert budget.can_retry() is False
 
 
-def test_would_exceed_deadline():
+def test_would_exceed_deadline() -> None:
     policy = RetryPolicy(total_deadline=10.0)
 
     # elapsed 5.0 + delay 4.0 = 9.0 < 10.0 -> OK
